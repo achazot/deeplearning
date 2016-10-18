@@ -14,25 +14,22 @@
 
 \chapter{Deep Learning}
 
-
 \section{Machine Learning}
 
 \subsection{Principes généraux}
 
 Le Machine Learning, également connu sous le terme d'apprentissage automatique, est un sous-domaine de l'intelligence artificielle, ayant vu le jour dans
-les années 1950\footnote{
-A Short History of Machine Learning :
-  \hyperref[Mach_Learn_history]{''http://www.forbes.com/sites/bernardmarr/2016/02/19/a-short-history-of-machine-learning-every-manager-should-read/fdc5dfd323ff''}
-   \\
-   Arthur Samuel: Pioneer in Machine Learning :
-   \hyperref[item]{''http://infolab.stanford.edu/pub/voy/museum/samuel.html''}}.
+les années 1950\cite{Bib_Marr}\cite{Bib_McCar}
 Son champ d'application est aujourd'hui très vaste, et sa principale limite réside en la quantité d'informations exploitables, disponible au sein d'un domaine donné.
+\\
+
 L'accroissement de la collecte, du stockage et de la mise à disposition des données que nous connaissons depuis quelques années a permit l'essor de ces algorithmes et leur transposition à de nombreux problèmes :
+
 \begin{itemize}
-\item la classification de contenu audio-visuel au sens large, allant de l'image au sujet d'un texte ou d'une revue
-\item le filtrage de contenus, tels que les spams ou les intrusions sur les systèmes d'informations
-\item le tri et la sélection d'informations les plus pertinentes à délivrer via la publicité ou les flux de contenus des médias sociaux
-\item l'analyse de sentiments
+  \item la classification de contenu audio-visuel au sens large, allant de l'image au sujet d'un texte ou d'une revue
+  \item le filtrage de contenus, tels que les spams ou les intrusions sur les systèmes d'informations
+  \item le tri et la sélection d'informations les plus pertinentes à délivrer via la publicité ou les flux de contenus des médias sociaux
+  \item l'analyse de sentiments
 \end{itemize}
 
 Plus précisément, ce concept recouvre les systèmes constitués de paramètres réglables, typiquement vus sous la forme de
@@ -41,30 +38,35 @@ par sa capacité à ajuster ses paramètres de manière autonome, en se basant s
 
 Dans ce qui va suivre, cette technique sera abordée à la lumière des problèmes de reconnaissance de formes, les entrées dont il sera alors question étant des images ou des vidéos.
 
-\subsection{Architecture des systèmes de reconnaissance de forme}
+\subsection{Architecture des systèmes de reconnaissance de formes}
 
-
-L'architecture d'un système de reconnaissance de formes comprend deux éléments, à savoir :
+L'architecture d'un système de reconnaissance de formes comprend deux éléments principaux :
 
 \begin{itemize}
-\item un algorithme dédié à l'extraction des caractéristiques de l'entrée
-\item un algorithme de classification produisant la sortie permettant généralement d'associer l'entrée à une classe
+  \item un extracteur des caractéristiques de l'entrée
+  \item un classifieur qui donne le résultat en sortie, associant généralement l'entrée à une classe
 \end{itemize}
 
-Dans les années 50, les premiers modèles de reconnaissance étaient constitués d'extracteurs de caractéristiques "faits-main", peu modulaires et très longs à implémenter\cite{LeCun_IA}.
-Cet algorithme est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle en fonction des motifs qu'elle contient.
-Dans un deuxième temps, le classifieur discrimine les classes selon une somme pondérée obtenue à partir du vecteur de caractéristiques
+
+Dans les années 50, les premiers modèles de reconnaissance étaient constitués d'extracteurs de caractéristiques "faits-main", peu modulaires et fastidieux à implémenter\cite{Bib_LeCun}.
+C'est lui qui est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle des motifs qu'elle contient. 
+\\
+
+Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée, obtenue à partir du vecteur de caractéristiques.
 Cet algorithme peut, quant à lui, ajuster ses paramètres internes, en vue d'améliorer la sortie produite en fonction des résultats précédents. On parle alors d'entraînement.
+Dans le cadre d'une classification dite linéaire, ces réglages s'effectuent sur la valeur des poids associés aux caractéristiques.
+L'enjeu du classifieur est de réduire la différence entre les résultats attendus ($y$) et effectifs ($\hat{y}$).
+Cela revient à minimiser la fonction objectif\footnote{Dans le framework Caffe, une telle fonction est désignée sous le nom de loss function.} suivante, en modulant les pondérations ($\theta$) :
 
-L'approche par apprentissage profond a permit d'étendre la capacité d'entraînement à l'ensemble de la chaîne de reconnaissance.
+\begin{center} $ J({\theta}) =  \sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i})^2 $ \end{center} 
 
+D'autre part, comme représenté figure~\ref{fig:c1p1s2}, l'approche par apprentissage profond vise à étendre la capacité d'entraînement à l'ensemble de la chaîne de reconnaissance de formes.
 
-
-\begin{figure}
+\begin{figure}[!h]
     \centering
     \makebox[\textwidth]{\includesvg[width=.6\paperwidth]{c1p1s2_schema}}
-    \caption{Différentes approches de la reconnaissance de forme}
-    \label{fig:Fig1}
+    \caption{Différentes approches de reconnaissance de formes}
+    \label{fig:c1p1s2}
 \end{figure}
 
 Notre étude se base sur ce dernier modèle, où l'extracteur de caractéristiques, aussi appelé noyau, peut être entraîné.
@@ -76,8 +78,20 @@ capacité de généralisation : faculté d'un système à produire des résultat
 \section{Réseaux de neurones}
 
 \begin{thebibliography}{9}
+\bibitem{Bib_Marr}
+  Bernard Marr,
+  \emph{A short history of machine learning},
+  Forbes.com, 19 février 2016,
+  \hyperref[Bib_Marr]{http://www.forbes.com/sites/bernardmarr/2016/02/19/a-short-history-of-machine-learning-every-manager-should-read/fdc5dfd323ff}.
+  
+\bibitem{Bib_McCar}
+  John McCarthy,
+  \emph{Arthur Samuel: Pioneer in Machine Learning },
+  Stanford Computer Science, Stanford University,
+  \hyperref[Bib_McCar]{http://infolab.stanford.edu/pub/voy/museum/samuel.html}.
+  
 
-\bibitem{LeCun_IA}
+\bibitem{Bib_LeCun}
   Yann LeCun,
   \emph{Recherches sur l'intelligence artificielle},
   Collège de France, France,
