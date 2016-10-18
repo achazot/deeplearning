@@ -1,6 +1,8 @@
 \documentclass[a4paper,10pt]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
+\usepackage{svg}
+\usepackage[frenchb]{babel}
 
 %opening
 \title{}
@@ -41,19 +43,48 @@ Dans ce qui va suivre, cette technique sera abordée à la lumière des problèm
 
 \subsection{Architecture des systèmes de reconnaissance de forme}
 
-L'architecture d'un système de reconnaissance de formes comprend deux éléments, à savoir un algorithme dédié à l'extraction des caractéristiques de l'entrée, ainsi qu'un algorithme de classification produisant le résultat.   
-Dans les années 50, les premiers modèles de reconnaissance étaient constitués d'extracteurs de caractéristiques "faits-main", peu modulaires et très longs à implémenter. 
-L'algorithme de classification pouvait quant à lui ajuster des paramètres internes, en vue d'améliorer la sortie produite en fonction des résultats précédents. On parle alors d'entraînement. 
+L'architecture d'un système de reconnaissance de formes comprend deux éléments, à savoir :
+
+\begin{itemize}
+\item un algorithme dédié à l'extraction des caractéristiques de l'entrée
+\item un algorithme de classification produisant la sortie permettant généralement d'associer l'entrée à une classe 
+\end{itemize}
+
+Dans les années 50, les premiers modèles de reconnaissance étaient constitués d'extracteurs de caractéristiques "faits-main", peu modulaires et très longs à implémenter\cite{LeCun_IA}.
+Cet algorithme est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle en fonction des motifs qu'elle contient.
+Dans un deuxième temps, le classifieur discrimine les classes selon une somme pondérée obtenue à partir du vecteur de caractéristiques
+Cet algorithme peut, quant à lui, ajuster ses paramètres internes, en vue d'améliorer la sortie produite en fonction des résultats précédents. On parle alors d'entraînement. 
+
 
 L'approche par apprentissage profond a permit d'étendre la capacité d'entraînement à l'ensemble de la chaîne de reconnaissance.
 
 
+\begin{figure}
+  \centering
+  \makebox[\textwidth]{\includesvg[width=.9\paperwidth]{img/c1p1s1_schema} }
+  \caption{Architecture des systèmes de reconnaissance de formes}
+  \label{fig:c1p1s2}
+\end{figure}
+
 Notre étude se base sur ce dernier modèle, où l'extracteur de caractéristiques, aussi appelé noyau, peut être entraîné. 
 
-deep learning : connu depuis 1980 mais répendu depuis 2012
+deep learning : connu depuis 1980 mais répandu depuis 2012
 perceptron 
 capacité de généralisation : faculté d'un système à produire des résultats corrects sur des entrées inconnues, après un phase d'entraînement 
 
 \section{Réseaux de neurones}
+
+\begin{thebibliography}{9}
+
+\bibitem{LeCun_IA}
+  Yann LeCun,
+  \emph{Recherches sur l'intelligence artificielle},
+  Collège de France, France,
+  7p,
+  \hyperref[Bib_LeCun]{https://www.college-de-france.fr/site/yann-lecun/Recherches-sur-l-intelligence-artificielle.htm}.
+
+\end{thebibliography}
+
+
 \end{document}
 
