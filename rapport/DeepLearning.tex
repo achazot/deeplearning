@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{svg}
+\usepackage{float}
 \usepackage[frenchb]{babel}
 
 %opening
@@ -38,7 +39,7 @@ par sa capacité à ajuster ses paramètres de manière autonome, en se basant s
 
 Dans ce qui va suivre, cette technique sera abordée à la lumière des problèmes de reconnaissance de formes, les entrées dont il sera alors question étant des images ou des vidéos.
 
-\subsection{Architecture des systèmes de reconnaissance de formes}
+\subsection{Systèmes de reconnaissance de formes}
 
 L'architecture d'un système de reconnaissance de formes comprend deux éléments principaux :
 
@@ -48,47 +49,90 @@ L'architecture d'un système de reconnaissance de formes comprend deux élément
 \end{itemize}
 
 
-Dans les années 50, les premiers modèles de reconnaissance étaient constitués d'extracteurs de caractéristiques "faits-main", peu modulaires et fastidieux à implémenter\cite{Bib_LeCun}.
+Dans les années 50, les premiers modèles de reconnaissance étaient constitués d'un extracteur de caractéristiques "fait-main", peu modulaire et fastidieux à implémenter\cite{Bib_LeCun}.
 C'est lui qui est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle des motifs qu'elle contient. 
 \\
 
-Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée, obtenue à partir du vecteur de caractéristiques.
-Cet algorithme peut, quant à lui, ajuster ses paramètres internes, en vue d'améliorer la sortie produite en fonction des résultats précédents. On parle alors d'entraînement.
+Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée des composantes du vecteur de caractéristiques. 
+Une valeur seuil est fixée de telle sorte à ce que la sortie soit activée ou non en fonction du calcul précédent. 
+Lorsque des erreurs sont repérées en sortie, cet algorithme va réajuster ses paramètres internes en vue d'améliorer les réponses suivantes. On parle alors d'entraînement.
+\\
+
 Dans le cadre d'une classification dite linéaire, ces réglages s'effectuent sur la valeur des poids associés aux caractéristiques.
-L'enjeu du classifieur est de réduire la différence entre les résultats attendus ($y$) et effectifs ($\hat{y}$).
-Cela revient à minimiser la fonction objectif\footnote{Dans le framework Caffe, une telle fonction est désignée sous le nom de loss function.} suivante, en modulant les pondérations ($\theta$) :
+L'enjeu du classifieur est de réduire la différence entre les résultats attendus, ($y$) et effectifs ($\hat{y}$).
+La phase d'entraînement revient à minimiser une fonction objectif\footnote{Dans le framework Caffe, une telle fonction est désignée sous le nom de loss function.}, en modulant les pondérations ($\theta$).
+D'un point de vue mathématique, la fonction objectif peut différer en fonction de l'approche adoptée. On la trouvera par exemple sous forme de moindres carrés de résidus\cite{Bib_WikiLS} :  
 
-\begin{center} $ J({\theta}) =  \sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i})^2 $ \end{center} 
+\begin{center} $ J({\theta}) =  \sum\limits_{i=1}^{n} (\hat{y}_{i} - y_{i})^2 $ \end{center} 
 
-D'autre part, comme représenté figure~\ref{fig:c1p1s2}, l'approche par apprentissage profond vise à étendre la capacité d'entraînement à l'ensemble de la chaîne de reconnaissance de formes.
+ou d'erreur quadratique moyenne\cite{Bib_WikiMSE} : 
 
-\begin{figure}[!h]
+\begin{center} $ J({\theta}) =  \frac{1}{n}\sum\limits_{i=1}^{n} (\hat{y}_{i} - y_{i})^2 $ \end{center} 
+
+Un tel comportement correspond à un apprentissage supervisé, où la réponse correcte est connue, permettant à la machine de s'améliorer. Une fois cette phase achevée, le système est théoriquement apte à
+classifier avec exactitude de nouvelles entrées, jusqu'alors inconnues : c'est la généralisation. 
+\\
+
+D'autre part, comme représenté figure~\ref{fig:c1p1s2}, l'approche par apprentissage profond vise à étendre les capacités d'entraînement et de généralisation à l'ensemble de la chaîne de reconnaissance de formes.
+Notre étude se base sur ce dernier modèle, où l'extracteur de caractéristiques, aussi appelé noyau, peut être entraîné.
+\begin{figure}[H]
     \centering
     \makebox[\textwidth]{\includesvg[width=.6\paperwidth]{c1p1s2_schema}}
     \caption{Différentes approches de reconnaissance de formes}
     \label{fig:c1p1s2}
 \end{figure}
 
-Notre étude se base sur ce dernier modèle, où l'extracteur de caractéristiques, aussi appelé noyau, peut être entraîné.
 
+
+
+\section{Réseaux de neurones}
+
+\subsection{Architecture modulaire}
+
+A la base des réseaux de neurones se trouve le concept de neurone formel représenté sur la figure suivante.
+\\
+
+Nous retrouvons les entrées $x_{i}$ qui correspondent dans notre cas aux i composantes du vecteur de caractéristiques donné par l'extracteur. 
+Ces entrées sont ensuite sommées avec leur poid $\theta_{i}$ (ou coefficient synaptique) respectif, ainsi qu'un coefficient $\theta_{0}$ appelé biais. 
+Enfin, le résultat pondéré est transmis à une fonction d'activation non linéaire\cite{Bib_WikiAN}. Celle-ci activera la synapse suivante (ici, la sortie), si son résultat dépasse un seuil donné par $w_{0}$.
+\\
+
+En pratique, plusieurs fonctions d'activation peuvent être choisies au regard de leurs caractéristiques par rapport au problème donné (dérivabilité, performances lors du calcul... ).
+Parmi les plus utilisées, on peut citer les fonctions sigmoïdes et tangentes hyperboliques. Leur efficacité tient notamment du fait qu'elles soient indéfiniement et rapidement dérivables et non polynômiales. 
+\\
+
+Par ailleurs, l'efficacité d'un tel système est concrètement mesurée lors de la phase d'entraînement. Il s'agit 
+
+\subsection{Réseau multicouches}
+
+Les problèmes traditionnels de classification nécessitent des modèles plus élaborés, car ils sont souvent insolubles à l'aide de simples régressions linéaires. 
+visant à répartir des nuages de points entre les différentes classes à l'aide d'une droite.
+Pour ce faire, des architectures plus complexes ont vu le jour dans les années 80, donnant naissance au deep learning.
+
+
+
+\subsection{Autres}
 deep learning : connu depuis 1980 mais répandu depuis 2012
 perceptron
 capacité de généralisation : faculté d'un système à produire des résultats corrects sur des entrées inconnues, après un phase d'entraînement
+rétropopagation : depuis les années 80
+gardient : incrément ou décrément calculable de l'erreur correspondant à la modification des poids $\theta$ lors de la phase d'entraînement 
 
-\section{Réseaux de neurones}
+
 
 \begin{thebibliography}{9}
 \bibitem{Bib_Marr}
   Bernard Marr,
   \emph{A short history of machine learning},
   Forbes.com, 19 février 2016,
-  \hyperref[Bib_Marr]{http://www.forbes.com/sites/bernardmarr/2016/02/19/a-short-history-of-machine-learning-every-manager-should-read/fdc5dfd323ff}.
+  \url{http://www.forbes.com/sites/bernardmarr/2016/02/19/a-short-history-of-machine-learning-every-manager-should-read/fdc5dfd323ff}.
   
 \bibitem{Bib_McCar}
   John McCarthy,
   \emph{Arthur Samuel: Pioneer in Machine Learning },
-  Stanford Computer Science, Stanford University,
-  \hyperref[Bib_McCar]{http://infolab.stanford.edu/pub/voy/museum/samuel.html}.
+  Stanford University, Stanford, California, USA -
+  Stanford Computer Science, 
+  \url{http://infolab.stanford.edu/pub/voy/museum/samuel.html}.
   
 
 \bibitem{Bib_LeCun}
@@ -96,9 +140,31 @@ capacité de généralisation : faculté d'un système à produire des résultat
   \emph{Recherches sur l'intelligence artificielle},
   Collège de France, France,
   7p,
-  \hyperref[Bib_LeCun]{https://www.college-de-france.fr/site/yann-lecun/Recherches-sur-l-intelligence-artificielle.htm}.
+  \url{https://www.college-de-france.fr/site/yann-lecun/Recherches-sur-l-intelligence-artificielle.htm}.
 
-\end{thebibliography}
+  \bibitem{Bib_WikiLS}
+  Wikipedia,
+  \emph{Least squares},
+  \url{https://en.wikipedia.org/wiki/Least_squares}.
+  
+\bibitem{Bib_WikiMSE}
+  Wikipedia,
+  \emph{Mean squared error},
+  \url{https://en.wikipedia.org/wiki/Mean_squared_error}.
 
+  \bibitem{Bib_WikiAN}
+  Wikipedia,
+  \emph{Artificial neuron},
+  \url{https://en.wikipedia.org/wiki/Artificial_neuron}.
+  
+\bibitem{Bib_ZeFer}
+  Matthew D Zeiler, Rob Fergus, 
+  28 Nov 2013, 
+  Cornell University Library, Ithaca, NY, USA - 
+  Computer vision and pattern recognition,
+  11p
+  \emph{Visualizing and Understanding Convolutional Networks, v3},
+  \url{https://arxiv.org/abs/1311.2901}.
+  \end{thebibliography}
 
 \end{document}
