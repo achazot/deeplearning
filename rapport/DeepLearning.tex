@@ -1,8 +1,27 @@
 \documentclass[a4paper,10pt]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
-\usepackage{svg}
 \usepackage[frenchb]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[nonumberlist]{glossaries}
+\usepackage{svg}
+
+
+\makeglossaries
+% entrées du lexique
+\newglossaryentry{training}
+{
+  name={entraînement},
+	description={Lorem ipsum dolor sit amet}
+}
+\newglossaryentry{carvec}
+{
+  name={vecteur de caractéristiques},
+	description={En reconnaissance de formes, un vecteur de caractéristiques est une représentation numérique de
+	propriétés visuelles d'un objet. Il peut par exemple être constitué de la quantité de lignes présentes dans
+	l'image selon leur orientation, chaque orientation constituant une dimension du vecteur. Ces représentations
+	permettent d'effectuer des traitements statistiques, comme des régressions linéaires}
+}
 
 %opening
 \title{}
@@ -21,7 +40,7 @@
 Le Machine Learning, également connu sous le terme d'apprentissage automatique, est un sous-domaine de l'intelligence artificielle, ayant vu le jour dans
 les années 1950\cite{Bib_Marr}\cite{Bib_McCar}
 Son champ d'application est aujourd'hui très vaste, et sa principale limite réside en la quantité d'informations exploitables, disponible au sein d'un domaine donné.
-\\
+
 
 L'accroissement de la collecte, du stockage et de la mise à disposition des données que nous connaissons depuis quelques années a permit l'essor de ces algorithmes et leur transposition à de nombreux problèmes :
 
@@ -38,7 +57,7 @@ par sa capacité à ajuster ses paramètres de manière autonome, en se basant s
 
 Dans ce qui va suivre, cette technique sera abordée à la lumière des problèmes de reconnaissance de formes, les entrées dont il sera alors question étant des images ou des vidéos.
 
-\subsection{Architecture des systèmes de reconnaissance de formes}
+\subsection{Systèmes de reconnaissance de formes}
 
 L'architecture d'un système de reconnaissance de formes comprend deux éléments principaux :
 
@@ -49,7 +68,7 @@ L'architecture d'un système de reconnaissance de formes comprend deux élément
 
 
 Dans les années 50, les premiers modèles de reconnaissance étaient constitués d'extracteurs de caractéristiques "faits-main", peu modulaires et fastidieux à implémenter\cite{Bib_LeCun}.
-C'est lui qui est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle des motifs qu'elle contient. 
+C'est lui qui est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle des motifs qu'elle contient.
 \\
 
 Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée, obtenue à partir du vecteur de caractéristiques.
@@ -58,7 +77,7 @@ Dans le cadre d'une classification dite linéaire, ces réglages s'effectuent su
 L'enjeu du classifieur est de réduire la différence entre les résultats attendus ($y$) et effectifs ($\hat{y}$).
 Cela revient à minimiser la fonction objectif\footnote{Dans le framework Caffe, une telle fonction est désignée sous le nom de loss function.} suivante, en modulant les pondérations ($\theta$) :
 
-\begin{center} $ J({\theta}) =  \sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i})^2 $ \end{center} 
+\begin{center} $ J({\theta}) =  \sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i})^2 $ \end{center}
 
 D'autre part, comme représenté figure~\ref{fig:c1p1s2}, l'approche par apprentissage profond vise à étendre la capacité d'entraînement à l'ensemble de la chaîne de reconnaissance de formes.
 
@@ -77,26 +96,42 @@ capacité de généralisation : faculté d'un système à produire des résultat
 
 \section{Réseaux de neurones}
 
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includesvg[width=.6\paperwidth]{c1p2s1_neuron}}
+    \caption{Schéma d'un neurone formel}
+    \label{fig:c1p2s1}
+\end{figure}
+
+\gls{carvec}
+\gls{training}
+
+
+% ajoute le lexique
+\setglossarystyle{altlist}
+\printglossaries
+
+
 \begin{thebibliography}{9}
 \bibitem{Bib_Marr}
   Bernard Marr,
   \emph{A short history of machine learning},
   Forbes.com, 19 février 2016,
-  \hyperref[Bib_Marr]{http://www.forbes.com/sites/bernardmarr/2016/02/19/a-short-history-of-machine-learning-every-manager-should-read/fdc5dfd323ff}.
-  
+  \url{http://www.forbes.com/sites/bernardmarr/2016/02/19/a-short-history-of-machine-learning-every-manager-should-read/fdc5dfd323ff}.
+
 \bibitem{Bib_McCar}
   John McCarthy,
   \emph{Arthur Samuel: Pioneer in Machine Learning },
   Stanford Computer Science, Stanford University,
-  \hyperref[Bib_McCar]{http://infolab.stanford.edu/pub/voy/museum/samuel.html}.
-  
+  \url{http://infolab.stanford.edu/pub/voy/museum/samuel.html}.
+
 
 \bibitem{Bib_LeCun}
   Yann LeCun,
   \emph{Recherches sur l'intelligence artificielle},
   Collège de France, France,
   7p,
-  \hyperref[Bib_LeCun]{https://www.college-de-france.fr/site/yann-lecun/Recherches-sur-l-intelligence-artificielle.htm}.
+  \url{https://www.college-de-france.fr/site/yann-lecun/Recherches-sur-l-intelligence-artificielle.htm}.
 
 \end{thebibliography}
 
