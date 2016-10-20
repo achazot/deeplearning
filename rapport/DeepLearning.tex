@@ -74,7 +74,7 @@ Dans les années 50, les premiers modèles de reconnaissance étaient constitué
 C'est lui qui est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle des motifs qu'elle contient.
 \\
 
-Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée des composantes du vecteur de caractéristiques.
+Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée des composantes du \gls{carvec}.
 Une valeur seuil est fixée de telle sorte à ce que la sortie soit activée ou non en fonction du calcul précédent.
 Lorsque des erreurs sont repérées en sortie, cet algorithme va réajuster ses paramètres internes en vue d'améliorer les réponses suivantes. On parle alors d'entraînement.
 \\
@@ -96,15 +96,6 @@ classifier avec exactitude de nouvelles entrées, jusqu'alors inconnues : c'est 
 
 D'autre part, comme représenté figure~\ref{fig:c1p1s2}, l'approche par apprentissage profond vise à étendre les capacités d'entraînement et de généralisation à l'ensemble de la chaîne de reconnaissance de formes.
 Notre étude se base sur ce dernier modèle, où l'extracteur de caractéristiques, aussi appelé noyau, peut être entraîné.
-\begin{figure}[H]
-    \centering
-    \makebox[\textwidth]{\includesvg[width=.6\paperwidth]{c1p1s2_schema}}
-    \caption{Différentes approches de reconnaissance de formes}
-    \label{fig:c1p1s2}
-\end{figure}
-
-
-
 
 \section{Réseaux de neurones}
 
@@ -174,9 +165,14 @@ capacité de généralisation : faculté d'un système à produire des résultat
 rétropopagation : depuis les années 80
 gardient : incrément ou décrément calculable de l'erreur correspondant à la modification des poids $\theta$ lors de la phase d'entraînement
 
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includesvg[width=.4\paperwidth]{c1p2s1_points}}
+    \caption{Grrr}
+    \label{fig:c1p2s1}
+\end{figure}
 
 
-\gls{carvec}
 \gls{training}
 
 

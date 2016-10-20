@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 \glossaryentry{vecteur de caractéristiques?\glossentry{carvec}|setentrycounter[]{page}\glsnumberformat}{5}
 \glossaryentry{entraînement?\glossentry{training}|setentrycounter[]{page}\glsnumberformat}{5}
+=======
+\glossaryentry{vecteur de caractéristiques?\glossentry{carvec}|setentrycounter[]{page}\glsnumberformat}{2}
+\glossaryentry{vecteur de caractéristiques?\glossentry{carvec}|setentrycounter[]{page}\glsnumberformat}{3}
+\glossaryentry{entraînement?\glossentry{training}|setentrycounter[]{page}\glsnumberformat}{4}
+>>>>>>> 2b7c3ec09086683ae519a77c69acdc5aedfecc81
