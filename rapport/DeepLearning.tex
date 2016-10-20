@@ -73,7 +73,7 @@ Dans les années 50, les premiers modèles de reconnaissance étaient constitué
 C'est lui qui est chargé de traduire l'image, ou partie de l'image, en une représentation vectorielle des motifs qu'elle contient.
 \\
 
-Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée des composantes du vecteur de caractéristiques.
+Dans un deuxième temps, le classifieur détermine la classe résultante selon une somme pondérée des composantes du \gls{carvec}.
 Une valeur seuil est fixée de telle sorte à ce que la sortie soit activée ou non en fonction du calcul précédent.
 Lorsque des erreurs sont repérées en sortie, cet algorithme va réajuster ses paramètres internes en vue d'améliorer les réponses suivantes. On parle alors d'entraînement.
 \\
@@ -118,7 +118,7 @@ A la base des réseaux de neurones se trouve le concept de neurone formel repré
     \label{fig:c1p2s1}
 \end{figure}
 
-Nous retrouvons les entrées $x_{i}$ qui correspondent dans notre cas aux i composantes du vecteur de caractéristiques donné par l'extracteur.
+Nous retrouvons les entrées $x_{i}$ qui correspondent dans notre cas aux i composantes du \gls{carvec} donné par l'extracteur.
 Ces entrées sont ensuite sommées avec leur poid $\theta_{i}$ (ou coefficient synaptique) respectif, ainsi qu'un coefficient $\theta_{0}$ appelé biais.
 Enfin, le résultat pondéré est transmis à une fonction d'activation non linéaire\cite{Bib_WikiAN}. Celle-ci activera la synapse suivante (ici, la sortie), si son résultat dépasse un seuil donné par $w_{0}$.
 \\
@@ -151,7 +151,7 @@ gardient : incrément ou décrément calculable de l'erreur correspondant à la 
     \label{fig:c1p2s1}
 \end{figure}
 
-\gls{carvec}
+
 \gls{training}
 
 
