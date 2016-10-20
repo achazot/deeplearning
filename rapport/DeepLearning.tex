@@ -2,6 +2,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{svg}
+\usepackage{graphicx}
 \usepackage{float}
 \usepackage[frenchb]{babel}
 \usepackage[T1]{fontenc}
@@ -54,7 +55,7 @@ L'accroissement de la collecte, du stockage et de la mise à disposition des don
 
 Plus précisément, ce concept recouvre les systèmes constitués de paramètres réglables, typiquement vus sous la forme de
 valeurs vectorielles, en vue de fournir la sortie attendue pour une série de valeurs données en entrée. En outre, ce type d'apprentissage se distingue
-par sa capacité à ajuster ses paramètres de manière autonome, en se basant sur l'expérience des données précedemment traîtées.
+par sa capacité à ajuster ses paramètres de manière autonome, en se basant sur l'expérience des données précédemment traîtées.
 
 Dans ce qui va suivre, cette technique sera abordée à la lumière des problèmes de reconnaissance de formes, les entrées dont il sera alors question étant des images ou des vidéos.
 
@@ -79,15 +80,15 @@ Lorsque des erreurs sont repérées en sortie, cet algorithme va réajuster ses 
 \\
 
 Dans le cadre d'une classification dite linéaire, ces réglages s'effectuent sur la valeur des poids associés aux caractéristiques.
-L'enjeu du classifieur est de réduire la différence entre les résultats attendus, ($y$) et effectifs ($\hat{y}$).
+L'enjeu du classifieur est de réduire la différence entre les résultats attendus $\hat{y}$, et effectifs $y$.
 La phase d'entraînement revient à minimiser une fonction objectif\footnote{Dans le framework Caffe, une telle fonction est désignée sous le nom de loss function.}, en modulant les pondérations ($\theta$).
 D'un point de vue mathématique, la fonction objectif peut différer en fonction de l'approche adoptée. On la trouvera par exemple sous forme de moindres carrés de résidus\cite{Bib_WikiLS} :
 
-\begin{center} $ J({\theta}) =  \sum\limits_{i=1}^{n} (\hat{y}_{i} - y_{i})^2 $ \end{center}
+\begin{center} $ J({\theta}) =  \sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i} )^2 $ \end{center}
 
 ou d'erreur quadratique moyenne\cite{Bib_WikiMSE} :
 
-\begin{center} $ J({\theta}) =  \frac{1}{n}\sum\limits_{i=1}^{n} (\hat{y}_{i} - y_{i})^2 $ \end{center}
+\begin{center} $ J({\theta}) =  \frac{1}{n}\sum\limits_{i=1}^{n} (y_{i} - \hat{y}_{i})^2 $ \end{center}
 
 Un tel comportement correspond à un apprentissage supervisé, où la réponse correcte est connue, permettant à la machine de s'améliorer. Une fois cette phase achevée, le système est théoriquement apte à
 classifier avec exactitude de nouvelles entrées, jusqu'alors inconnues : c'est la généralisation.
@@ -107,34 +108,63 @@ Notre étude se base sur ce dernier modèle, où l'extracteur de caractéristiqu
 
 \section{Réseaux de neurones}
 
-\subsection{Architecture modulaire}
+\subsection{Neurone artificiel}
 
-A la base des réseaux de neurones se trouve le concept de neurone formel représenté sur la figure suivante.
+A la base des réseaux de neurones se trouve le concept de neurone formel représenté sur la figure\ref{fig:c1p2s1}.
 \\
 \begin{figure}[H]
     \centering
-    \makebox[\textwidth]{\includesvg[width=.6\paperwidth]{c1p2s1_neuron}}
+    \makebox[\textwidth]{\includesvg[width=.4\paperwidth]{c1p2s1_neuron}}
     \caption{Schéma d'un neurone formel}
     \label{fig:c1p2s1}
 \end{figure}
 
 Nous retrouvons les entrées $x_{i}$ qui correspondent dans notre cas aux i composantes du vecteur de caractéristiques donné par l'extracteur.
-Ces entrées sont ensuite sommées avec leur poid $\theta_{i}$ (ou coefficient synaptique) respectif, ainsi qu'un coefficient $\theta_{0}$ appelé biais.
-Enfin, le résultat pondéré est transmis à une fonction d'activation non linéaire\cite{Bib_WikiAN}. Celle-ci activera la synapse suivante (ici, la sortie), si son résultat dépasse un seuil donné par $w_{0}$.
+Ces entrées sont ensuite sommées avec leur poids $\theta_{i}$ (ou coefficient synaptique) respectif, ainsi qu'un coefficient $\theta_{0}$ appelé biais.
+Le résultat pondéré est ensuite transmis à une fonction d'activation non linéaire\cite{Bib_WikiAN}. Celle-ci activera la synapse suivante (ici, la sortie), si son résultat dépasse un seuil donné.
 \\
 
-En pratique, plusieurs fonctions d'activation peuvent être choisies au regard de leurs caractéristiques par rapport au problème donné (dérivabilité, performances lors du calcul... ).
+En pratique, plusieurs fonctions d'activation peuvent être choisies au regard de leurs caractéristiques.
 Parmi les plus utilisées, on peut citer les fonctions sigmoïdes et tangentes hyperboliques. Leur efficacité tient notamment du fait qu'elles soient indéfiniement et rapidement dérivables et non polynômiales.
 \\
 
-Par ailleurs, l'efficacité d'un tel système est concrètement mesurée lors de la phase d'entraînement. Il s'agit
+Admettons que ce système contienne des entrées sous forme de vecteurs à $n$ dimensions, étiquettés selon les classes $C_{0}$ et $C_{1}$. Le but de l'entraînement sera d'obtenir en sortie : \\
+
+\begin{center}
+
+$\left\{
+\begin{array}{ll}
+ y=0,$ si $ x\in C_{0} \\
+ y=1,$ si $ x\in C_{1} 
+\end{array}
+\right.\ , \forall x
+$
+
+\end{center}
+sachant que, 
+\begin{center}
+$ y = \phi( \sum\limits_{i=1}^{n}(x_{i}\theta_{i}) + \theta_{0} ),$ avec $\phi$ fonction d'activation
+\end{center}
+
+le problème revient à trouver la valeur optimale du vecteur $\theta$, permettant de séparer linéairement les classes. 
+La figure illustre ce concept dans le cadre d'une classification d'éléments à deux dimensions, distribués entre deux classes.  
 
 \subsection{Réseau multicouches}
 
-Les problèmes traditionnels de classification nécessitent des modèles plus élaborés, car ils sont souvent insolubles à l'aide de simples régressions linéaires.
-visant à répartir des nuages de points entre les différentes classes à l'aide d'une droite.
-Pour ce faire, des architectures plus complexes ont vu le jour dans les années 80, donnant naissance au deep learning.
+Les problèmes traditionnels de classification nécessitent des modèles plus élaborés, car ils sont souvent insolubles à l'aide de simples régressions linéaires. On dit que l'ensemble des éléments constituant nos classes
+sont non linéairement séparables (les résultats de la fonction XOR par exemple). On organise alors les neurones formels en successions de couches, ce qui permettra de diviser le plan en $n$ sous-ensembles, avec $n >2$.
+On appelle typiquement \textit{couche d'entrée} la première couche du réseau, \textit{couches cachées} les couches internes au réseau et \textit{couche de sortie} la dernière couche.
+Issue du site de tensorflow\cite{Bib_PlaygroundTF} (la librairie de calcul de machine learning développée par Google\cite{Bib_TenFlo}), la capture d'écran\ref{fig:c1p2s22} illustre les jeux de données pour lesquelles les régressions linéaires s'avèrent inefficaces.
 
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includegraphics[width=.6\paperwidth]{c1p2s2_tensorflow}}
+    \caption{Schéma d'un neurone formel}
+    \label{fig:c1p2s22}
+\end{figure}
+
+
+Dans cette configuration, les interactions entre les différents neurones, et les différentes couches, correspondent à ce qui a été décrit précédemment. L'information se propage ``en avant``
 
 
 \subsection{Autres}
@@ -191,6 +221,16 @@ gardient : incrément ou décrément calculable de l'erreur correspondant à la 
   \emph{Artificial neuron},
   \url{https://en.wikipedia.org/wiki/Artificial_neuron}.
 
+  \bibitem{Bib_PlaygroundTF}
+  Playgroung TensorFlow,
+  \emph{Tinker with a neural network in your browser},
+  \url{http://playground.tensorflow.org}.
+  
+  \bibitem{Bib_TenFlo}
+  TensorFlow,
+  \emph{Open source software library for machine intelligence},
+  \url{https://www.tensorflow.org/}.
+  
 \bibitem{Bib_ZeFer}
   Matthew D Zeiler, Rob Fergus,
   28 Nov 2013,

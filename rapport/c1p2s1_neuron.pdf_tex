@@ -1,4 +1,4 @@
-%% Creator: Inkscape inkscape 0.91, www.inkscape.org
+%% Creator: Inkscape inkscape 0.48.5, www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
 %% Accompanies image file 'c1p2s1_neuron.pdf' (pdf, eps, ps)
 %%
@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{367.34011232bp}%
+    \setlength{\unitlength}{367.34010463bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -49,6 +49,6 @@
   \global\let\svgscale\undefined%
   \makeatother%
   \begin{picture}(1,0.63973621)%
-    \put(0,0){\includegraphics[width=\unitlength,page=1]{c1p2s1_neuron.pdf}}%
+    \put(0,0){\includegraphics[width=\unitlength]{c1p2s1_neuron.pdf}}%
   \end{picture}%
 \endgroup%
