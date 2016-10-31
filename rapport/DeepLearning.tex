@@ -130,19 +130,19 @@ Admettons que ce système contienne des entrées sous forme de vecteurs à $n$ d
 $\left\{
 \begin{array}{ll}
  y=0,$ si $ x\in C_{0} \\
- y=1,$ si $ x\in C_{1} 
+ y=1,$ si $ x\in C_{1}
 \end{array}
 \right.\ , \forall x
 $
 
 \end{center}
-sachant que, 
+sachant que,
 \begin{center}
 $ y = \phi( \sum\limits_{i=1}^{n}(x_{i}\theta_{i}) + \theta_{0} ),$ avec $\phi$ fonction d'activation
 \end{center}
 
-le problème revient à trouver la valeur optimale du vecteur $\theta$, permettant de séparer linéairement les classes. 
-La figure\ref{fig:c1p2s1_2} illustre ce concept dans le cadre d'une classification d'éléments à deux dimensions, distribués entre deux classes.  
+le problème revient à trouver la valeur optimale du vecteur $\theta$, permettant de séparer linéairement les classes.
+La figure\ref{fig:c1p2s1_2} illustre ce concept dans le cadre d'une classification d'éléments à deux dimensions, distribués entre deux classes.
 
 \begin{figure}[H]
     \centering
@@ -150,7 +150,6 @@ La figure\ref{fig:c1p2s1_2} illustre ce concept dans le cadre d'une classificati
     \caption{Classes linéairement séparables}
     \label{fig:c1p2s1_2}
 \end{figure}
-
 
 \subsection{Réseau multicouches}
 
@@ -169,11 +168,11 @@ Issue du site de tensorflow\cite{Bib_PlaygroundTF} (la librairie de calcul de ma
 
 Dans cette configuration, les interactions entre les différents neurones, et les différentes couches, correspondent à ce qui a été décrit précédemment. L'information se propage ``en avant`` (\textit{forward propagation} ou \textit{feed forward}).
 \par
-Pour ajuster les poids synaptiques lors de l'entraînement, chaque neurone formel calcule l'erreur locale dûe à la modification d'un poids (c'est l'équivalent de l'erreur globale présentée section 1.1.2, limitée à deux neurones). 
-La méthode de descente de gradient stochastique\cite{Bib_WikiSGD} va permettre d'estimer l'incrément ou le décrément d'erreur correspondant à la modification du poids en question. Cela consiste à dériver partiellement la fonction d'erreur par le poids local. 
+Pour ajuster les poids synaptiques lors de l'entraînement, chaque neurone formel calcule l'erreur locale dûe à la modification d'un poids (c'est l'équivalent de l'erreur globale présentée section 1.1.2, limitée à deux neurones).
+La méthode de descente de gradient stochastique\cite{Bib_WikiSGD} va permettre d'estimer l'incrément ou le décrément d'erreur correspondant à la modification du poids en question. Cela consiste à dériver partiellement la fonction d'erreur par le poids local.
 
 \begin{center}
-$\Delta \theta_{i,j} = -\alpha \dfrac{\partial E} {\partial \theta_{i,j}} $ , avec 
+$\Delta \theta_{i,j} = -\alpha \dfrac{\partial E} {\partial \theta_{i,j}} $ , avec
 $\left\{
 \begin{array}{ll}
  \Delta \theta_{i,j} $, variation de $\theta$ entre les neurones $i$ et $j$ $\\
@@ -187,7 +186,7 @@ $
 Notons qu'une valeur de $\alpha$ élevée augmente le risque de dépasser le minimum recherché, tandis qu'une valeur trop petite va rallonger la phase d'entraînement.
 \par
 Les difficultés à calculer cette dérivée à n'importe quel niveau du réseau mènent à utiliser la technique de la rétropopagation\cite{Bib_WikiBP} (\textit{backpropagation}). L'erreur est alors estimée par la couche de sortie (qui a connaissance du résultat)
-, puis relayée aux niveaux inférieurs, simplifiant ainsi leur descente de gradient respective. 
+, puis relayée aux niveaux inférieurs, simplifiant ainsi leur descente de gradient respective.
 
 \section{Réseaux convolutifs}
 
@@ -328,7 +327,7 @@ Wikipedia,
 Wikipedia,
 \emph{Backpropagation},
 \url{https://en.wikipedia.org/wiki/Backpropagation}.
-  
+
 \bibitem{Bib_ZeFer}
 Matthew D Zeiler, Rob Fergus,
 28 Nov 2013,
