@@ -52,6 +52,27 @@
 	permettent d'effectuer des traitements statistiques, comme des régressions linéaires}
 }
 
+\newglossaryentry{CNN}
+{
+  name={CNN},
+	description={Lorem ipsum dolor sit amet}
+}
+\newglossaryentry{MLNN}
+{
+  name={MLNN},
+	description={En reconnaissance de formes, un vecteur de caractéristiques est une représentation numérique de
+	propriétés visuelles d'un objet. Il peut par exemple être constitué de la quantité de lignes présentes dans
+	l'image selon leur orientation, chaque orientation constituant une dimension du vecteur. Ces représentations
+	permettent d'effectuer des traitements statistiques, comme des régressions linéaires}
+}
+
+\newglossaryentry{CIFAR 10}
+{
+  name={CIFAR 10},
+	description={Créée par Alex Krizhevsky, Vinod Nair, et Geoffrey Hinton, CIFAR 10 est une base de données adaptée aux problèmes de vision par ordinateur. Elle contient 60 000 images étiquetées selon 10 classes (6000 images par classe) typiquement de dimensions 32x32. Learning Multiple Layers of Features from Tiny Images, Alex Krizhevsky, 2009 }
+}
+
+
 %opening
 \title{}
 \author{}
@@ -71,7 +92,7 @@
 	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
 	{ \huge \bfseries \thetitle}\\
 	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
-	
+
 	\begin{minipage}{0.4\textwidth}
 		\begin{flushleft} \large
 			\emph{Auteurs:}\\
@@ -84,11 +105,11 @@
 			M. Adel Hafiane
 		\end{flushright}
 	\end{minipage}\\[2 cm]
-	
+
 	{\large \thedate}\\[2 cm]
- 
+
 	\vfill
-	
+
 \end{titlepage}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -229,7 +250,7 @@ Issue du site de tensorflow\cite{Bib_PlaygroundTF} (la librairie de calcul de ma
 \end{figure}
 
 
-Dans cette configuration, les interactions entre les différents neurones, et les différentes couches, correspondent à ce qui a été décrit précédemment. L'information se propage ``en avant`` (\textit{forward propagation} ou \textit{feed forward}).
+Dans cette configuration, les interactions entre les différents neurones, et les différentes couches, correspondent à ce qui a été décrit précédemment. L'information se propage `en avant` (\textit{forward propagation} ou \textit{feed forward}).
 \par
 Pour ajuster les poids synaptiques lors de l'entraînement, chaque neurone formel calcule l'erreur locale dûe à la modification d'un poids (c'est l'équivalent de l'erreur globale présentée section 1.1.2, limitée à deux neurones).
 La méthode de descente de gradient stochastique\cite{Bib_WikiSGD} va permettre d'estimer l'incrément ou le décrément d'erreur correspondant à la modification du poids en question. Cela consiste à dériver partiellement la fonction d'erreur par le poids local.
@@ -252,50 +273,54 @@ Les difficultés à calculer cette dérivée à n'importe quel niveau du réseau
 
 \section{Réseaux convolutifs}
 
+
 \subsection{Approche architecturale}
 
-L’approche adoptée par les CNNs consiste en premier lieu à adapter la structure du réseau aux entrées reçues, à savoir des images. 
+L’approche adoptée par les CNNs consiste en premier lieu à adapter la structure du réseau aux entrées reçues, à savoir des images.
 Les neurones sont organisés en 3 dimensions : hauteur, largeur et profondeur\footnote{Il faut bien faire la distinction entre la profondeur d’une couche, dont il est ici question, et celle du réseau en lui-même, qui signifie son nombre de couches}.
-Aussi, dans un tel réseau, les neurones seront seulement connectés à un nombre limité de neurones de la couche précédente. 
+Aussi, dans un tel réseau, les neurones seront seulement connectés à un nombre limité de neurones de la couche précédente.
 En définitive pour  $n$ classes, la sortie sera caractérisée par un vecteur résultant de dimensions $ 1 \times 1 \times n$.
-Une architecture de CNN répandue est composée des couches suivantes, dont les dimensions sont données à titre d'exemple pour un système utilisant les entrées de la base CIFAR 10 RGB :
+
+Une architecture de CNN répandue est composée des couches suivantes, dont les dimensions sont données à titre d'exemple pour un système utilisant les entrées de la base \gls{CIFAR 10} RGB :
 
 \begin{itemize}
   \item \textbf{INPUT} : un volume 3D de [$32 \times 32 \times 3$]
   \item \textbf{CONV} : chaque neurone calcule le produit de convolution entre ses poids et une région locale connectée de la couche d’entrée. Le résultat se traduit comme un volume où la profondeur correspond au nombre de filtres utilisés (soit un volume en sortie de dimensions [$32 \times 32 \times 12$] si on utilise 12 filtres).
+
   \item \textbf{ReLU} (Rectified Linear Unit) : cette couche utilise pour chacun de ses neurones un rectificateur linéaire comme f(x) = max(x, 0). Une telle fonction élémentaire est appliquée sur chacune des composantes du volume précédent. La dimension de la sortie est invariante, soit dans notre exemple [$32 \times 32 \times 12$]. 
   \item \textbf{POOL} : sous-échantillonnage sur la hauteur et la largeur de la couche précédente. Le volume résultant sera par exemple dimensionné de la manière suivante : [$16 \times 16 \times 12$].
   \item \textbf{FC} (Fully Connected) : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé en fonction de poids, de manière similaire aux réseaux multicouches non convolutifs. La dimension en sortie sera [$1 \times 1 \times 10$].
+
 \end{itemize}
 Notons que l’entraînement d’un tel réseau, par descente de gradient, concerne les couches CONV et FC qui effectuent leurs calculs en fonction de poids et biais paramétrables. Les couches POOL et ReLU traitent leurs entrées de manière fixe, indépendamment de l’avancée de l’entraînement.
 
 \begin{figure}[H]
     \centering
     \makebox[\textwidth]{\includegraphics[width=.5\paperwidth]{c1p3s1}}
-    \caption{Représentation simplifiée d'un CNN}
+    \caption{Evolution des données au sein d'un CNN simple}
     \label{fig:c1p3s1}
 \end{figure}
 
 
 
 \subsection{Convolution et pooling}
-Les paramètres des couches de convolution sont composés de filtres de même profondeur que la couche d’entée. 
-Les largeurs et hauteurs sont quant à elles moindres, afin d’être appliquées à des zones réduites de l’image, constituant une fenêtre de traitement. 
+Les paramètres des couches de convolution sont composés de filtres de même profondeur que la couche d’entée.
+Les largeurs et hauteurs sont quant à elles moindres, afin d’être appliquées à des zones réduites de l’image, constituant une fenêtre de traitement.
 Pour un filtre donné, les sous prélèvements locaux sont donc convolués avec les valeurs du filtre par glissement de la fenêtre dans une direction, jusqu’à ce que la surface entière ait été prise en compte.
-Le résultat de ces opérations se traduit en une « carte d’activation » à deux dimensions, traduisant la réponse d’une partie de l’image, puis de l’image entière, à la caractéristique contenue par le filtre. 
-L’empilement des « cartes d’activation » des différents filtres vont constituer la profondeur de l’entrée de la couche suivante (ReLU). 
+Le résultat de ces opérations se traduit en une « carte d’activation » à deux dimensions, traduisant la réponse d’une partie de l’image, puis de l’image entière, à la caractéristique contenue par le filtre.
+L’empilement des « cartes d’activation » des différents filtres vont constituer la profondeur de l’entrée de la couche suivante (ReLU).
 
-La disposition spatiale et le nombre de neurones présents dans le volume en sortie de la couche de convolution dépendent des 3 paramètres (aussi appelés hyper-paramètres) suivants : 
+La disposition spatiale et le nombre de neurones présents dans le volume en sortie de la couche de convolution dépendent des 3 paramètres (aussi appelés hyper-paramètres) suivants :
 \par
-\begin{itemize}  
-  \item \textbf{La profondeur} du volume en sortie, donnée par le nombre de filtres utilisés. Est appelée « colonne de profondeur » (\textit{depth column}), un ensemble de neurones connectés à la même région de l’entrée. 
-  \item \textbf{$S$ : le pas} avec lequel on décale le filtre le long de l’entrée va également déterminer la dimension de la sortie. En effet, un grand pas entraînera une sortie réduite dans l’espace, tandis qu’un pas d’un pixel donnera une sortie de taille maximum.   
+\begin{itemize}
+  \item \textbf{La profondeur} du volume en sortie, donnée par le nombre de filtres utilisés. Est appelée « colonne de profondeur » (\textit{depth column}), un ensemble de neurones connectés à la même région de l’entrée.
+  \item \textbf{$S$ : le pas} avec lequel on décale le filtre le long de l’entrée va également déterminer la dimension de la sortie. En effet, un grand pas entraînera une sortie réduite dans l’espace, tandis qu’un pas d’un pixel donnera une sortie de taille maximum.
   \item \textbf{$P$ : le padding à zéro}, qui consiste à compléter de part et d’autre le volume d’entrée avec des « $0$ ». L’intérêt de cette technique est de contrôler la taille du volume de sortie et, en particulier, de s’assurer qu’il soit égal à celui de l’entrée en hauteur et en largeur.
 \end{itemize}
 
 
 
-Etant données les variables suivantes : 
+Etant données les variables suivantes :
 \begin{center}
 
 $\left\{
@@ -309,23 +334,23 @@ $\left\{
 $
 \end{center}
 
-le nombre de neurones nécessaires au volume de sortie est donné par : 
+le nombre de neurones nécessaires au volume de sortie est donné par :
 \begin{center}
  $ \dfrac{W-F+2P}{S}+1$
 \end{center}
 
-Notons que dans un réseau convolutif, le partage des paramètres permet de limiter leur quantité et la complexité des calculs qui en découlent. 
-Cette technique s’appuie sur l’invariance d’une caractéristique, si on la translate dans l’espace. 
-En effet, on s’aperçoit que des mêmes propriétés visuelles peuvent se trouver à différents endroits, dans une ou différentes images. 
-Dans ce cas de figure, il devient pertinent d’utiliser les mêmes filtres (au sens de caractéristiques recherchées) sur l’ensemble de l’image d’entrée. 
-De plus, un neurone s’occupant d’une partie de l’image, on partagera un filtre –pour une profondeur donnée– entre tous les neurones, de manière à respecter ce principe. 
-Ainsi, on mutualise les paramètres et l’apprentissage qui en découle pour chacun des plans ($x_{i}$,$y_{i}$), avec $i  \in [0, nombre de filtres]$. 
-Cette méthode montre ses limites lorsque la position d’une caractéristique recherchée est fixe pour tout un jeu de données d’entrée (apprentissage et généralisation). 
-Par exemple, en considérant des chiffres toujours centrés sur l’image d’entrée, l’apprentissage effectué par les neurones responsables de cette partie de l’image ne sera d’aucune utilité pour les neurones traitant les coins.  
+Notons que dans un réseau convolutif, le partage des paramètres permet de limiter leur quantité et la complexité des calculs qui en découlent.
+Cette technique s’appuie sur l’invariance d’une caractéristique, si on la translate dans l’espace.
+En effet, on s’aperçoit que des mêmes propriétés visuelles peuvent se trouver à différents endroits, dans une ou différentes images.
+Dans ce cas de figure, il devient pertinent d’utiliser les mêmes filtres (au sens de caractéristiques recherchées) sur l’ensemble de l’image d’entrée.
+De plus, un neurone s’occupant d’une partie de l’image, on partagera un filtre –pour une profondeur donnée– entre tous les neurones, de manière à respecter ce principe.
+Ainsi, on mutualise les paramètres et l’apprentissage qui en découle pour chacun des plans ($x_{i}$,$y_{i}$), avec $i  \in [0, nombre de filtres]$.
+Cette méthode montre ses limites lorsque la position d’une caractéristique recherchée est fixe pour tout un jeu de données d’entrée (apprentissage et généralisation).
+Par exemple, en considérant des chiffres toujours centrés sur l’image d’entrée, l’apprentissage effectué par les neurones responsables de cette partie de l’image ne sera d’aucune utilité pour les neurones traitant les coins.
 \par
-L’intérêt du pooling est de réduire progressivement la taille de la représentation de l’entrée ainsi que le nombre de paramètres et de calculs afférents. 
-Cela s’effectue par la définition d’une fenêtre de traitement, puis la sélection de certaines unités pour chacune des zones de l’entrée. 
-Le résultat consiste en un sous-échantillonnage de l’entrée qui, dans la pratique, s’appuiera sur des fonctions max ou moyenne sur les valeurs de la fenêtre. 
+L’intérêt du pooling est de réduire progressivement la taille de la représentation de l’entrée ainsi que le nombre de paramètres et de calculs afférents.
+Cela s’effectue par la définition d’une fenêtre de traitement, puis la sélection de certaines unités pour chacune des zones de l’entrée.
+Le résultat consiste en un sous-échantillonnage de l’entrée qui, dans la pratique, s’appuiera sur des fonctions max ou moyenne sur les valeurs de la fenêtre.
 
 \subsection{Autres}
 deep learning : connu depuis 1980 mais répandu depuis 2012
@@ -334,9 +359,11 @@ capacité de généralisation : faculté d'un système à produire des résultat
 rétropopagation : depuis les années 80
 gardient : incrément ou décrément calculable de l'erreur correspondant à la modification des poids $\theta$ lors de la phase d'entraînement
 Les réseaux de neurones convolutifs, aussi appelés CNN ou ConvNets, ont été inventés par Yann LeCun, directeur du laboratoire d'intelligence artificielle FAIR pour
-l'entreprise Facebook depuis 2013 et titulaire de la chaire Informatique et Sciences Numériques au Collège de France. 
+l'entreprise Facebook depuis 2013 et titulaire de la chaire Informatique et Sciences Numériques au Collège de France.
 Les réseaux de neurones convolutifs reposent sur un mécanisme de poids partagés, detinés à minimiser le nombre de paramètres mis en jeu et, ainsi, d'améliorer les
-résultats issus de la phase de généralisation. 
+résultats issus de la phase de généralisation.
+
+
 
 % ajoute le lexique
 \setglossarystyle{altlist}
