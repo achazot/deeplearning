@@ -207,6 +207,15 @@ Une architecture de CNN répandue est composée des couches suivantes. A titre d
 \end{itemize}
 Notons que l’entraînement d’un tel réseau, par descente de gradient, concerne les couches CONV et FC qui effectuent leurs calculs en fonction de poids et biais paramétrables. Les couches POOL et ReLU traitent leurs entrées de manière fixe, indépendamment de l’avancée de l’entraînement.
 
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includegraphics[width=.5\paperwidth]{c1p3s1}}
+    \caption{Représentation d'un CNN simple}
+    \label{fig:c1p3s1}
+\end{figure}
+
+
+
 \subsection{Convolution et pooling}
 Les paramètres des couches de convolution sont composés de filtres de même profondeur que la couche d’entée. 
 Les largeurs et hauteurs sont quant à elles moindres, afin d’être appliquées à des zones réduites de l’image, constituant une fenêtre de traitement. 
