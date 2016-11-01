@@ -13,7 +13,13 @@ all:
 
 clean:
 	@echo "\033[0;32m*** Cleaning\033[0m"
-	@rm -f DeepLearning.aux
-	@rm -f DeepLearning-1.tex
-	@rm -f DeepLearning-1+0.tex
+	@rm -f *.aux
+	@rm -f *.gls
+	@rm -f *.out
+	@rm -f *.glg
+	@rm -f *.glo
+	@rm -f *.glsdefs
+	@rm -f *.pre
+	@rm -f *.ist
+	@rm -f *.log
 	@echo "\033[0;32m*** Done\033[0m"
