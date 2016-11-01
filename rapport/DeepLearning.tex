@@ -1,14 +1,40 @@
-\documentclass[a4paper,10pt]{report}
+\documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{svg}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{parskip}
-\usepackage[frenchb]{babel}
+
 \usepackage[T1]{fontenc}
 \usepackage[nonumberlist]{glossaries}
 \usepackage[inline]{asymptote}
+
+\usepackage[francais]{babel}
+
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+
+\title{Apprentissage profond et suivi d'objets}								% Title
+\author{Alban Chazot, Lisa Aubry}								% Author
+\date{\today}											% Date
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
 
 \makeglossaries
 % entrées du lexique
@@ -33,9 +59,39 @@
 
 \begin{document}
 
-\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Deep Learning}
+\begin{titlepage}
+	\centering
+    \vspace*{0.1 cm}
+    \includegraphics[scale = 0.25]{INSA}\\[0 cm]	% University Logo
+    \textsc{\LARGE INSA Centre Val de Loire}\\[2.0 cm]	% University Name
+	\textsc{\Large Sécurité et Technologies Informatiques}\\[0.5 cm]
+	\textsc{\large Architecture et Sécurité du Logiciel}\\[0.5 cm]
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{ \huge \bfseries \thetitle}\\
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+			\emph{Auteurs:}\\
+			\theauthor
+			\end{flushleft}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+			\emph{Tuteur:} \\
+			M. Adel Hafiane
+		\end{flushright}
+	\end{minipage}\\[2 cm]
+	
+	{\large \thedate}\\[2 cm]
+ 
+	\vfill
+	
+\end{titlepage}
+
+\chapter{Apprentissage profond}
 
 \section{Machine Learning}
 
@@ -46,18 +102,18 @@ les années 1950\cite{Bib_Marr}\cite{Bib_McCar}
 Son champ d'application est aujourd'hui très vaste, et sa principale limite réside en la quantité d'informations exploitables, disponible au sein d'un domaine donné.
 
 
-L'accroissement de la collecte, du stockage et de la mise à disposition des données que nous connaissons depuis quelques années a permit l'essor de ces algorithmes et leur transposition à de nombreux problèmes :
+L'accroissement de la collecte, du stockage et de la mise à disposition des données que nous connaissons depuis quelques années a permis l'essor de ces algorithmes et leur transposition à de nombreux problèmes :
 
 \begin{itemize}
   \item la classification de contenu audio-visuel au sens large, allant de l'image au sujet d'un texte ou d'une revue
   \item le filtrage de contenus, tels que les spams ou les intrusions sur les systèmes d'informations
   \item le tri et la sélection d'informations les plus pertinentes à délivrer via la publicité ou les flux de contenus des médias sociaux
-  \item l'analyse de sentiments
+  \item l'analyse et la prédiction de sentiments
 \end{itemize}
 
 Plus précisément, ce concept recouvre les systèmes constitués de paramètres réglables, typiquement vus sous la forme de
 valeurs vectorielles, en vue de fournir la sortie attendue pour une série de valeurs données en entrée. En outre, ce type d'apprentissage se distingue
-par sa capacité à ajuster ses paramètres de manière autonome, en se basant sur l'expérience des données précédemment traîtées.
+par sa capacité à ajuster ses paramètres de manière autonome, en se basant sur l'expérience des données précédemment traitées.
 
 Dans ce qui va suivre, cette technique sera abordée à la lumière des problèmes de reconnaissance de formes, les entrées dont il sera alors question étant des images ou des vidéos.
 
@@ -185,8 +241,7 @@ $
 
 Notons qu'une valeur de $\alpha$ élevée augmente le risque de dépasser le minimum recherché, tandis qu'une valeur trop petite va rallonger la phase d'entraînement.
 \par
-Les difficultés à calculer cette dérivée à n'importe quel niveau du réseau mènent à utiliser la technique de la rétropopagation\cite{Bib_WikiBP} (\textit{backpropagation}). L'erreur est alors estimée par la couche de sortie (qui a connaissance du résultat)
-, puis relayée aux niveaux inférieurs, simplifiant ainsi leur descente de gradient respective.
+Les difficultés à calculer cette dérivée à n'importe quel niveau du réseau mènent à utiliser la technique de la rétropopagation\cite{Bib_WikiBP} (\textit{backpropagation}). L'erreur est alors estimée par la couche de sortie (qui a connaissance du résultat), puis relayée aux niveaux inférieurs, simplifiant ainsi leur descente de gradient respective.
 
 \section{Réseaux convolutifs}
 
