@@ -1,14 +1,40 @@
-\documentclass[a4paper,10pt]{report}
+\documentclass[12pt]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{hyperref}
 \usepackage{svg}
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{parskip}
-\usepackage[frenchb]{babel}
+
 \usepackage[T1]{fontenc}
 \usepackage[nonumberlist]{glossaries}
 \usepackage[inline]{asymptote}
+
+\usepackage[francais]{babel}
+
+\usepackage{url}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+
+\title{Apprentissage profond et suivi d'objets}								% Title
+\author{Alban Chazot, Lisa Aubry}								% Author
+\date{\today}											% Date
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{\thetitle}
+\cfoot{\thepage}
 
 \makeglossaries
 % entrées du lexique
@@ -40,6 +66,13 @@
 	permettent d'effectuer des traitements statistiques, comme des régressions linéaires}
 }
 
+\newglossaryentry{CIFAR 10}
+{
+	name={CIFAR 10},
+	description={Créée par Alex Krizhevsky, Vinod Nair, et Geoffrey Hinton, CIFAR 10 est une base de données adaptée aux problèmes de vision par ordinateur. Elle contient 60 000 images étiquetées selon 10 classes (6000 images par classe) typiquement de dimensions 32x32. Learning Multiple Layers of Features from Tiny Images, Alex Krizhevsky, 2009 }
+}
+
+
 %opening
 \title{}
 \author{}
@@ -47,9 +80,39 @@
 
 \begin{document}
 
-\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\chapter{Deep Learning}
+\begin{titlepage}
+	\centering
+    \vspace*{0.1 cm}
+    \includegraphics[scale = 0.25]{INSA}\\[0 cm]	% University Logo
+    \textsc{\LARGE INSA Centre Val de Loire}\\[2.0 cm]	% University Name
+	\textsc{\Large Sécurité et Technologies Informatiques}\\[0.5 cm]
+	\textsc{\large Architecture et Sécurité du Logiciel}\\[0.5 cm]
+	\rule{\linewidth}{0.2 mm} \\[0.4 cm]
+	{ \huge \bfseries \thetitle}\\
+	\rule{\linewidth}{0.2 mm} \\[1.5 cm]
+
+	\begin{minipage}{0.4\textwidth}
+		\begin{flushleft} \large
+			\emph{Auteurs:}\\
+			\theauthor
+			\end{flushleft}
+			\end{minipage}~
+			\begin{minipage}{0.4\textwidth}
+			\begin{flushright} \large
+			\emph{Tuteur:} \\
+			M. Adel Hafiane
+		\end{flushright}
+	\end{minipage}\\[2 cm]
+
+	{\large \thedate}\\[2 cm]
+
+	\vfill
+
+\end{titlepage}
+
+\chapter{Apprentissage profond}
 
 \section{Machine Learning}
 
@@ -60,18 +123,18 @@ les années 1950\cite{Bib_Marr}\cite{Bib_McCar}
 Son champ d'application est aujourd'hui très vaste, et sa principale limite réside en la quantité d'informations exploitables, disponible au sein d'un domaine donné.
 
 
-L'accroissement de la collecte, du stockage et de la mise à disposition des données que nous connaissons depuis quelques années a permit l'essor de ces algorithmes et leur transposition à de nombreux problèmes :
+L'accroissement de la collecte, du stockage et de la mise à disposition des données que nous connaissons depuis quelques années a permis l'essor de ces algorithmes et leur transposition à de nombreux problèmes :
 
 \begin{itemize}
   \item la classification de contenu audio-visuel au sens large, allant de l'image au sujet d'un texte ou d'une revue
   \item le filtrage de contenus, tels que les spams ou les intrusions sur les systèmes d'informations
   \item le tri et la sélection d'informations les plus pertinentes à délivrer via la publicité ou les flux de contenus des médias sociaux
-  \item l'analyse de sentiments
+  \item l'analyse et la prédiction de sentiments
 \end{itemize}
 
 Plus précisément, ce concept recouvre les systèmes constitués de paramètres réglables, typiquement vus sous la forme de
 valeurs vectorielles, en vue de fournir la sortie attendue pour une série de valeurs données en entrée. En outre, ce type d'apprentissage se distingue
-par sa capacité à ajuster ses paramètres de manière autonome, en se basant sur l'expérience des données précédemment traîtées.
+par sa capacité à ajuster ses paramètres de manière autonome, en se basant sur l'expérience des données précédemment traitées.
 
 Dans ce qui va suivre, cette technique sera abordée à la lumière des problèmes de reconnaissance de formes, les entrées dont il sera alors question étant des images ou des vidéos.
 
@@ -199,10 +262,85 @@ $
 
 Notons qu'une valeur de $\alpha$ élevée augmente le risque de dépasser le minimum recherché, tandis qu'une valeur trop petite va rallonger la phase d'entraînement.
 \par
-Les difficultés à calculer cette dérivée à n'importe quel niveau du réseau mènent à utiliser la technique de la rétropopagation\cite{Bib_WikiBP} (\textit{backpropagation}). L'erreur est alors estimée par la couche de sortie (qui a connaissance du résultat)
-, puis relayée aux niveaux inférieurs, simplifiant ainsi leur descente de gradient respective.
+Les difficultés à calculer cette dérivée à n'importe quel niveau du réseau mènent à utiliser la technique de la rétropopagation\cite{Bib_WikiBP} (\textit{backpropagation}). L'erreur est alors estimée par la couche de sortie (qui a connaissance du résultat), puis relayée aux niveaux inférieurs, simplifiant ainsi leur descente de gradient respective.
 
 \section{Réseaux convolutifs}
+
+
+\subsection{Approche architecturale}
+
+L’approche adoptée par les CNNs consiste en premier lieu à adapter la structure du réseau aux entrées reçues, à savoir des images.
+Les neurones sont organisés en 3 dimensions : hauteur, largeur et profondeur\footnote{Il faut bien faire la distinction entre la profondeur d’une couche, dont il est ici question, et celle du réseau en lui-même, qui signifie son nombre de couches}.
+Aussi, dans un tel réseau, les neurones seront seulement connectés à un nombre limité de neurones de la couche précédente.
+En définitive pour  $n$ classes, la sortie sera caractérisée par un vecteur résultant de dimensions $ 1 \times 1 \times n$.
+Une architecture de CNN répandue est composée des couches suivantes. A titre d’exemple, nous avons choisi d’illustrer les dimensions des couches pour un système utilisant les entrées de la base \gls{CIFAR 10} RGB :
+
+\begin{itemize}
+  \item \textbf{INPUT} : un volume 3D de [$32 \times 32 \times 3$]
+  \item \textbf{CONV} : chaque neurone calcule le produit de convolution entre ses poids et une région locale connectée de la couche d’entrée. Le résultat se traduit comme un volume où la profondeur correspond au nombre de filtres utilisés (soit un volume en sortie de dimensions [$32 \times 32 \times 12$] si on utilise 12 filtres).
+  \item \textbf{ReLU} (Rectified Linear Unit) : cette couche utilise pour chacun de ses neurones un rectificateur linéaire comme f(x) = max(x, 0). Une telle fonction élémentaire est appliquée sur chacune des composantes du volume précédent. La dimension de la sortie est invariante, soit dans notre exemple [$32 \times 32 \times 12$].
+  \item \textbf{POOL}: sous-échantillonnage sur la hauteur et la largeur de la couche précédente. Le volume résultant sera par exemple dimensionné de la manière suivante : [$16 \times 16 \times 12$].
+  \item \textbf{FC (FullyConnected)} : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé en fonction de poids, de manière similaire aux réseaux multicouches non convolutifs. La dimension en sortie sera [$1 \times 1 \times 10$].
+\end{itemize}
+Notons que l’entraînement d’un tel réseau, par descente de gradient, concerne les couches CONV et FC qui effectuent leurs calculs en fonction de poids et biais paramétrables. Les couches POOL et ReLU traitent leurs entrées de manière fixe, indépendamment de l’avancée de l’entraînement.
+
+\begin{figure}[H]
+    \centering
+    \makebox[\textwidth]{\includegraphics[width=.5\paperwidth]{c1p3s1}}
+    \caption{Evolution des données au sein d'un CNN simple}
+    \label{fig:c1p3s1}
+\end{figure}
+
+
+
+\subsection{Convolution et pooling}
+Les paramètres des couches de convolution sont composés de filtres de même profondeur que la couche d’entée.
+Les largeurs et hauteurs sont quant à elles moindres, afin d’être appliquées à des zones réduites de l’image, constituant une fenêtre de traitement.
+Pour un filtre donné, les sous prélèvements locaux sont donc convolués avec les valeurs du filtre par glissement de la fenêtre dans une direction, jusqu’à ce que la surface entière ait été prise en compte.
+Le résultat de ces opérations se traduit en une « carte d’activation » à deux dimensions, traduisant la réponse d’une partie de l’image, puis de l’image entière, à la caractéristique contenue par le filtre.
+L’empilement des « cartes d’activation » des différents filtres vont constituer la profondeur de l’entrée de la couche suivante (ReLU).
+
+La disposition spatiale et le nombre de neurones présents dans le volume en sortie de la couche de convolution dépendent des 3 paramètres (aussi appelés hyper-paramètres) suivants :
+\par
+\begin{itemize}
+  \item \textbf{La profondeur} du volume en sortie, donnée par le nombre de filtres utilisés. Est appelée « colonne de profondeur » (\textit{depth column}), un ensemble de neurones connectés à la même région de l’entrée.
+  \item \textbf{$S$ : le pas} avec lequel on décale le filtre le long de l’entrée va également déterminer la dimension de la sortie. En effet, un grand pas entraînera une sortie réduite dans l’espace, tandis qu’un pas d’un pixel donnera une sortie de taille maximum.
+  \item \textbf{$P$ : le padding à zéro}, qui consiste à compléter de part et d’autre le volume d’entrée avec des « $0$ ». L’intérêt de cette technique est de contrôler la taille du volume de sortie et, en particulier, de s’assurer qu’il soit égal à celui de l’entrée en hauteur et en largeur.
+\end{itemize}
+
+
+
+Etant données les variables suivantes :
+\begin{center}
+
+$\left\{
+\begin{array}{ll}
+ W$ : taille de l’entrée (volume)$\\
+ F$ : taille de la fenêtre de traitement de la couche de convolution$\\
+ S$ : pas de glissement de la fenêtre de traitement$\\
+ P$ : padding à zéro$
+\end{array}
+\right.
+$
+\end{center}
+
+le nombre de neurones nécessaires au volume de sortie est donné par :
+\begin{center}
+ $ \dfrac{W-F+2P}{S}+1$
+\end{center}
+
+Notons que dans un réseau convolutif, le partage des paramètres permet de limiter leur quantité et la complexité des calculs qui en découlent.
+Cette technique s’appuie sur l’invariance d’une caractéristique, si on la translate dans l’espace.
+En effet, on s’aperçoit que des mêmes propriétés visuelles peuvent se trouver à différents endroits, dans une ou différentes images.
+Dans ce cas de figure, il devient pertinent d’utiliser les mêmes filtres (au sens de caractéristiques recherchées) sur l’ensemble de l’image d’entrée.
+De plus, un neurone s’occupant d’une partie de l’image, on partagera un filtre –pour une profondeur donnée– entre tous les neurones, de manière à respecter ce principe.
+Ainsi, on mutualise les paramètres et l’apprentissage qui en découle pour chacun des plans ($x_{i}$,$y_{i}$), avec $i  \in [0, nombre de filtres]$.
+Cette méthode montre ses limites lorsque la position d’une caractéristique recherchée est fixe pour tout un jeu de données d’entrée (apprentissage et généralisation).
+Par exemple, en considérant des chiffres toujours centrés sur l’image d’entrée, l’apprentissage effectué par les neurones responsables de cette partie de l’image ne sera d’aucune utilité pour les neurones traitant les coins.
+\par
+L’intérêt du pooling est de réduire progressivement la taille de la représentation de l’entrée ainsi que le nombre de paramètres et de calculs afférents.
+Cela s’effectue par la définition d’une fenêtre de traitement, puis la sélection de certaines unités pour chacune des zones de l’entrée.
+Le résultat consiste en un sous-échantillonnage de l’entrée qui, dans la pratique, s’appuiera sur des fonctions max ou moyenne sur les valeurs de la fenêtre.
 
 \subsection{Autres}
 deep learning : connu depuis 1980 mais répandu depuis 2012
@@ -210,6 +348,10 @@ perceptron
 capacité de généralisation : faculté d'un système à produire des résultats corrects sur des entrées inconnues, après un phase d'entraînement
 rétropopagation : depuis les années 80
 gardient : incrément ou décrément calculable de l'erreur correspondant à la modification des poids $\theta$ lors de la phase d'entraînement
+Les réseaux de neurones convolutifs, aussi appelés CNN ou ConvNets, ont été inventés par Yann LeCun, directeur du laboratoire d'intelligence artificielle FAIR pour
+l'entreprise Facebook depuis 2013 et titulaire de la chaire Informatique et Sciences Numériques au Collège de France.
+Les réseaux de neurones convolutifs reposent sur un mécanisme de poids partagés, detinés à minimiser le nombre de paramètres mis en jeu et, ainsi, d'améliorer les
+résultats issus de la phase de généralisation.
 
 
 
