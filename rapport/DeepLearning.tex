@@ -8,7 +8,7 @@
 \usepackage[frenchb]{babel}
 \usepackage[T1]{fontenc}
 \usepackage[nonumberlist]{glossaries}
-
+\usepackage[inline]{asymptote}
 
 \makeglossaries
 % entrées du lexique
@@ -20,6 +20,20 @@
 \newglossaryentry{carvec}
 {
   name={vecteur de caractéristiques},
+	description={En reconnaissance de formes, un vecteur de caractéristiques est une représentation numérique de
+	propriétés visuelles d'un objet. Il peut par exemple être constitué de la quantité de lignes présentes dans
+	l'image selon leur orientation, chaque orientation constituant une dimension du vecteur. Ces représentations
+	permettent d'effectuer des traitements statistiques, comme des régressions linéaires}
+}
+
+\newglossaryentry{CNN}
+{
+  name={CNN},
+	description={Lorem ipsum dolor sit amet}
+}
+\newglossaryentry{MLNN}
+{
+  name={MLNN},
 	description={En reconnaissance de formes, un vecteur de caractéristiques est une représentation numérique de
 	propriétés visuelles d'un objet. Il peut par exemple être constitué de la quantité de lignes présentes dans
 	l'image selon leur orientation, chaque orientation constituant une dimension du vecteur. Ces représentations
@@ -166,7 +180,7 @@ Issue du site de tensorflow\cite{Bib_PlaygroundTF} (la librairie de calcul de ma
 \end{figure}
 
 
-Dans cette configuration, les interactions entre les différents neurones, et les différentes couches, correspondent à ce qui a été décrit précédemment. L'information se propage ``en avant`` (\textit{forward propagation} ou \textit{feed forward}).
+Dans cette configuration, les interactions entre les différents neurones, et les différentes couches, correspondent à ce qui a été décrit précédemment. L'information se propage `en avant` (\textit{forward propagation} ou \textit{feed forward}).
 \par
 Pour ajuster les poids synaptiques lors de l'entraînement, chaque neurone formel calcule l'erreur locale dûe à la modification d'un poids (c'est l'équivalent de l'erreur globale présentée section 1.1.2, limitée à deux neurones).
 La méthode de descente de gradient stochastique\cite{Bib_WikiSGD} va permettre d'estimer l'incrément ou le décrément d'erreur correspondant à la modification du poids en question. Cela consiste à dériver partiellement la fonction d'erreur par le poids local.
@@ -189,13 +203,15 @@ Les difficultés à calculer cette dérivée à n'importe quel niveau du réseau
 , puis relayée aux niveaux inférieurs, simplifiant ainsi leur descente de gradient respective.
 
 \section{Réseaux convolutifs}
-\subsection{AHAHAHA}
+
 \subsection{Autres}
 deep learning : connu depuis 1980 mais répandu depuis 2012
 perceptron
 capacité de généralisation : faculté d'un système à produire des résultats corrects sur des entrées inconnues, après un phase d'entraînement
 rétropopagation : depuis les années 80
 gardient : incrément ou décrément calculable de l'erreur correspondant à la modification des poids $\theta$ lors de la phase d'entraînement
+
+
 
 % ajoute le lexique
 \setglossarystyle{altlist}
