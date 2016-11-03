@@ -13,3 +13,9 @@
 *.bbl
 *.o
 Makefile
+bin/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+install_manifest.txt
+CTestTestfile.cmake
