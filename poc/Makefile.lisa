@@ -1,8 +1,8 @@
 CXX = g++
-CXXFLAGS = -Wall -g -std=c++11 -D"USE_OPENCV=1" -D"USE_CUDNN=1" -D"CPU_ONLY=0"
+CXXFLAGS = -Wall -g -std=c++11 -D"USE_OPENCV=1" -D"USE_CUDNN=0" -D"CPU_ONLY=1"
 EXEC_NAME = poc
-INCLUDES = -I/home/lisa/sources/caffe/include/
-DLIBS = -L/home/lisa/sources/caffe/build/lib/ -Wl,-rpath=/home/lisa/sources/caffe/build/lib/
+INCLUDES = -I/home/dibi/sources/caffe/include/
+DLIBS = -L/home/dibi/sources/caffe/build/lib/ -Wl,-rpath=/home/dibi/sources/caffe/build/lib/
 LIBS = -lcaffe -lglog -lopencv_core -lopencv_highgui -lopencv_imgproc -lboost_system
 
 SOURCES  := $(wildcard src/*.cpp)
