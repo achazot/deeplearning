@@ -65,6 +65,7 @@
 {
 	name={CIFAR 10},
 	description={Créée par Alex Krizhevsky, Vinod Nair, et Geoffrey Hinton, CIFAR 10 est une base de données adaptée aux problèmes de vision par ordinateur. Elle contient 60 000 images étiquetées selon 10 classes (6000 images par classe) typiquement de dimensions 32x32. Learning Multiple Layers of Features from Tiny Images, Alex Krizhevsky, 2009}
+
 }
 
 
@@ -106,6 +107,13 @@
 	\vfill
 
 \end{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\tableofcontents
+\pagebreak
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \chapter{Apprentissage profond}
 
@@ -270,12 +278,15 @@ Aussi, dans un tel réseau, les neurones seront seulement connectés à un nombr
 En définitive pour  $n$ classes, la sortie sera caractérisée par un vecteur résultant de dimensions $ 1 \times 1 \times n$.
 Une architecture de \gls{CNN} répandue est composée des couches suivantes. A titre d’exemple, nous avons choisi d’illustrer les dimensions des couches pour un système utilisant les entrées de la base \gls{CIFAR 10} RGB :
 
+
 \begin{itemize}
   \item \textbf{INPUT} : un volume 3D de [$32 \times 32 \times 3$]
   \item \textbf{CONV} : chaque neurone calcule le produit de convolution entre ses poids et une région locale connectée de la couche d’entrée. Le résultat se traduit comme un volume où la profondeur correspond au nombre de filtres utilisés (soit un volume en sortie de dimensions [$32 \times 32 \times 12$] si on utilise 12 filtres).
-  \item \textbf{ReLU} (Rectified Linear Unit) : cette couche utilise pour chacun de ses neurones un rectificateur linéaire comme f(x) = max(x, 0). Une telle fonction élémentaire est appliquée sur chacune des composantes du volume précédent. La dimension de la sortie est invariante, soit dans notre exemple [$32 \times 32 \times 12$].
-  \item \textbf{POOL}: sous-échantillonnage sur la hauteur et la largeur de la couche précédente. Le volume résultant sera par exemple dimensionné de la manière suivante : [$16 \times 16 \times 12$].
-  \item \textbf{FC (FullyConnected)} : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé en fonction de poids, de manière similaire aux réseaux multicouches non convolutifs. La dimension en sortie sera [$1 \times 1 \times 10$].
+
+  \item \textbf{ReLU} (Rectified Linear Unit) : cette couche utilise pour chacun de ses neurones un rectificateur linéaire comme f(x) = max(x, 0). Une telle fonction élémentaire est appliquée sur chacune des composantes du volume précédent. La dimension de la sortie est invariante, soit dans notre exemple [$32 \times 32 \times 12$]. 
+  \item \textbf{POOL} : sous-échantillonnage sur la hauteur et la largeur de la couche précédente. Le volume résultant sera par exemple dimensionné de la manière suivante : [$16 \times 16 \times 12$].
+  \item \textbf{FC} (Fully Connected) : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé en fonction de poids, de manière similaire aux réseaux multicouches non convolutifs. La dimension en sortie sera [$1 \times 1 \times 10$].
+
 \end{itemize}
 Notons que l’entraînement d’un tel réseau, par descente de gradient, concerne les couches CONV et FC qui effectuent leurs calculs en fonction de poids et biais paramétrables. Les couches POOL et ReLU traitent leurs entrées de manière fixe, indépendamment de l’avancée de l’entraînement.
 
