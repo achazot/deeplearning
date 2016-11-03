@@ -53,7 +53,6 @@
 	l'image selon leur orientation, chaque orientation constituant une dimension du vecteur. Ces représentations
 	permettent d'effectuer des traitements statistiques, comme des régressions linéaires}
 }
-
 \newglossaryentry{CNN}
 {
   name={CNN},
@@ -65,7 +64,6 @@
   name={MLNN},
 	description={Multi-Layer Neural Network}
 }
-
 \newglossaryentry{CIFAR 10}
 {
   name={CIFAR 10},
@@ -280,8 +278,8 @@ L’approche adoptée par les \gls{CNN}s consiste en premier lieu à adapter la 
 Les neurones sont organisés en 3 dimensions : hauteur, largeur et profondeur\footnote{Il faut bien faire la distinction entre la profondeur d’une couche, dont il est ici question, et celle du réseau en lui-même, qui signifie son nombre de couches}.
 Aussi, dans un tel réseau, les neurones seront seulement connectés à un nombre limité de neurones de la couche précédente.
 En définitive pour  $n$ classes, la sortie sera caractérisée par un vecteur résultant de dimensions $ 1 \times 1 \times n$.
+Une architecture de \gls{CNN} répandue est composée des couches suivantes. A titre d’exemple, nous avons choisi d’illustrer les dimensions des couches pour un système utilisant les entrées de la base \gls{CIFAR 10} RGB :
 
-Une architecture de CNN répandue est composée des couches suivantes, dont les dimensions sont données à titre d'exemple pour un système utilisant les entrées de la base \gls{CIFAR 10} RGB :
 
 \begin{itemize}
   \item \textbf{INPUT} : un volume 3D de [$32 \times 32 \times 3$]
@@ -297,7 +295,7 @@ Notons que l’entraînement d’un tel réseau, par descente de gradient, conce
 \begin{figure}[H]
     \centering
     \makebox[\textwidth]{\includegraphics[width=.5\paperwidth]{c1p3s1}}
-    \caption{Evolution des données au sein d'un CNN simple}
+    \caption{Evolution des données au sein d'un \gls{CNN} simple}
     \label{fig:c1p3s1}
 \end{figure}
 

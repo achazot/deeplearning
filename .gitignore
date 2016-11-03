@@ -5,4 +5,10 @@
 *.pdf
 *.glo
 *.glg
+*.gls
 *.ist
+*.glsdefs
+*.pre
+*.blg
+*.bbl
+*.o
