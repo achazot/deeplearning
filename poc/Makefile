@@ -1,0 +1,20 @@
+CXX = g++
+CXXFLAGS = -Wall -g -std=c++11
+EXEC_NAME = poc
+INCLUDES = -I/home/dibi/sources/caffe/include/
+DLIBS = -L/home/dibi/sources/caffe/build/lib/ -Wl,-rpath=/home/dibi/sources/caffe/build/lib/
+LIBS = -lcaffe -lglog -lopencv_core -lopencv_highgui -lopencv_imgproc -lboost_system
+
+SOURCES  := $(wildcard src/*.cpp)
+OBJ_FILES := $(SOURCES:src/%.cpp=build/%.o)
+
+all : $(EXEC_NAME)
+
+clean :
+	rm $(EXEC_NAME) $(OBJ_FILES)
+
+$(EXEC_NAME) : $(OBJ_FILES)
+	$(CXX) -o $(EXEC_NAME) $(OBJ_FILES) $(LIBS) $(DLIBS)
+
+$(OBJ_FILES) : build/%.o : src/%.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
