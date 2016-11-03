@@ -3,12 +3,10 @@ include(FindPackageHandleStandardArgs)
 
 project (poc)
 
-option(CAFFE_CPU_ONLY "Use CPU only for Caffe" OFF)
-
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
 # ------------------------------------------------------------------------------
-# C++11 settings
+# settings
 # ------------------------------------------------------------------------------
 if(CMAKE_COMPILER_IS_GNUCXX)
   if(NOT CMAKE_CXX_FLAGS MATCHES "-std=c\\+\\+11")
@@ -23,6 +21,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED 1)
 
 add_definitions(-DGLOG_NO_ABBREVIATED_SEVERITIES -DNO_STRICT)
 add_definitions(-D"USE_OPENCV=1")
+
+
+find_package(CUDA)
+if (CUDA_FOUND)
+	message( "Using GPU" )
+else ()
+	message( "Using CPU ONLY" )
+  add_definitions(-DCPU_ONLY)
+endif ()
 
 
 # ------------------------------------------------------------------------------
@@ -60,8 +67,3 @@ find_package(Caffe CONFIG REQUIRED)
 include_directories(${Caffe_INCLUDE_DIRS})
 target_link_libraries(poc ${Caffe_LIBRARIES})
 cmake_policy(POP)
-
-
-if(CPU_ONLY)
-  add_definitions(-DCPU_ONLY)
-endif()

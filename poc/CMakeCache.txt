@@ -582,7 +582,7 @@ CUDA_parse_cubin:INTERNAL=/usr/share/cmake-2.8/Modules/FindCUDA/parse_cubin.cmak
 //Location of run_nvcc.cmake
 CUDA_run_nvcc:INTERNAL=/usr/share/cmake-2.8/Modules/FindCUDA/run_nvcc.cmake
 //Details about finding CUDA
-FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr/local/cuda][/usr/local/cuda/bin/nvcc][/usr/local/cuda/include][/usr/local/cuda/lib64/libcudart.so][v7.5(7.5)]
+FIND_PACKAGE_MESSAGE_DETAILS_CUDA:INTERNAL=[/usr/local/cuda][/usr/local/cuda/bin/nvcc][/usr/local/cuda/include][/usr/local/cuda/lib64/libcudart.so][v7.5()]
 //Details about finding GFLAGS
 FIND_PACKAGE_MESSAGE_DETAILS_GFLAGS:INTERNAL=[/usr/include][/usr/lib/x86_64-linux-gnu/libgflags.so][v()]
 //Details about finding GLOG
