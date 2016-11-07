@@ -23,7 +23,7 @@ class Classifier {
              const string& mean_file,
              const string& label_file);
 
-  std::vector<Prediction> Classify(const cv::Mat& img, int N = 5);
+  std::vector<Prediction> Classify(const cv::Mat& img, int N = 10);
 
  private:
   void SetMean(const string& mean_file);
