@@ -1,5 +1,43 @@
-\chapter{Faster R-CNN}
+\chapter{Prise en main de la bibliothèque Caffe}
 
-  \section{Principes}
+  \section{La méthode R-CNN}
 
-    \subsection{Again}
+    \subsection{Description}
+    
+      L'application de CNNs aux problèmes de classification est ici abordée à travers la bibliothèque open-source Caffe, développée
+      par Berkley Vision and Learning Center (BVLC)\cite{Bib_CaffeHome}. Une documentation complète du framework est disponible sur le site internet 
+      officiel\cite{Bib_CaffeTuto}, décrivant notamment les éléments de référence afin de concevoir, entraîner et tester des réseaux de neurones. 
+      
+      En vue d'aborder les problèmes de détection et de localisation d'objets, nous avons misé sur Faster R-CNN\cite{Bib_FasterRCNN}, permettant d'étendre dans ce sens les possibilités offertes par Caffe.
+      Cette application des réseaux convolutifs se base sur des régions de l'image, on parle de R-CNN (Region-based CNN).
+      Il est alors possible de tirer les positions de régions d'intérêt (ROI, Region of Interest) contenant les objets classifiés au moyen du framework Caffe. 
+      Enfin notons que Faster R-CNN est nativement implémenté selon deux versions, en Python et en Matlab. 
+      
+      Faster R-CNN est orienté vers la détection d'objets en quasi temps-réel, s'appuyant sur des avancées telles que SPPnet ou Fast R-CNN. 
+      Cependant, les précédentes incarnations de ces algorithmes étaient freinées par le temps nécessaire en amont de la détection, à savoir la proposition de régions d'intérêt (Region Proposal) nécessitant validation. 
+      Parmi les méthodes de propositions de régions les plus connues, on trouve celles tirées de conversion de l'image en superpixels, ou encore celles basées sur le glissement d'une fenêtre sur la surface à traiter. L'approche adoptée par Fast et Faster R-CNN est différente. 
+      Elle vise à séparer le problème de proposition d'objet de celui de détection de l'objet, tout en mutualisant un certain nombre de données entre ces deux facettes. 
+      Le framework employé va donc être composé de plusieurs modules aux objectifs disctincts : 
+      
+      \begin{itemize}
+       \item Un module visant à proposer des régions d'intérêt appelé RPN (Region Proposal Network)
+       \item Un module de détection d'objet au sein des régions d'intérêt (Faster R-CNN) 
+       \item Un module de classification basé sur le bibliothèque Caffe
+      \end{itemize}
+      
+      Ici, l'ensemble de la chaîne fait appel à plusieurs couches de convolution et est entraînable. 
+      L'objectif d'optimisation liée à la detection d'objets est également atteint, 
+      puisqu'on observe une réduction du goulet d'étranglement représenté par la proposition de régions d'intérêt à 0.01 seconde par image sur GPU (sur PASCAL VOC). 
+      Une autre évolution introduite par Faster R-CNN et RPN consiste à alterner l'utilisation des deux premiers modules, tout en partageant les caractéritiques résultant des convolutions respectives. 
+      Cela aboutit en une amélioration du temps de traîtement de l'image, pour les phases de test et d'entraînement. 
+      
+      Notons également que depuis sa publication en 2015, Faster R-CNN et RPN ont compté sur plusieurs premières places à des compétitions internationales, des applications dans divers domaines tels que la détection
+      d'objets 3D ou encore l'intégration à des produits commerciaux grands publics tels que Pinterest. 
+      
+    \subsection{Principes}
+      
+      Dans Faster R-CNN, les cartes de caractéritiques résultant de la convolution sont mises au service de suggestions de régions délimitant un objet (region proposal) au sein de l'image. Le réseau se voit également
+      complété d'un RPN (Region Proposal Network). Un RPN est un type de CNN capable simultanément d'estimer la présence ou non d'un objet (objectness score) et d'en donner les limites, en tout point de l'image.
+      Un RPN est entraînable de bout-en-bout 
+      
+      
