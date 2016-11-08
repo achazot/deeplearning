@@ -1,9 +1,12 @@
 cmake_minimum_required (VERSION 2.8)
 
-project (faster_rcnn_demo)
+project (faster_cpp)
+
+list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
+
 
 # ------------------------------------------------------------------------------
-# settings
+# compiler settings
 # ------------------------------------------------------------------------------
 if(CMAKE_COMPILER_IS_GNUCXX)
 	if(NOT CMAKE_CXX_FLAGS MATCHES "-std=c\\+\\+11")
@@ -14,22 +17,48 @@ set(CMAKE_CXX_EXTENSIONS 0)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED 1)
 
+add_definitions(-DGLOG_NO_ABBREVIATED_SEVERITIES -DNO_STRICT)
+add_definitions(-D"USE_OPENCV=1")
+
+
+find_package(CUDA)
+if (CUDA_FOUND)
+	message( "---- Using GPU" )
+else ()
+	message( "---- Using CPU ONLY" )
+	add_definitions(-DCPU_ONLY)
+endif ()
+
 set(CMAKE_BUILD_TYPE Debug)
 
-
 # ------------------------------------------------------------------------------
-# comp
+# compilation
 # ------------------------------------------------------------------------------
 
-add_executable(main main.cpp)
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
+add_executable (
+	fcpp ${SOURCES}
+)
 
 # ------------------------------------------------------------------------------
 # libs
 # ------------------------------------------------------------------------------
 
-include_directories
-(
+find_package(Boost 1.40 COMPONENTS filesystem system REQUIRED)
+include_directories(${Boost_INCLUDE_DIRS})
+target_link_libraries(fcpp ${Boost_LIBRARIES})
+
+include("cmake/External/glog.cmake")
+include_directories(SYSTEM ${GLOG_INCLUDE_DIRS})
+list(APPEND Caffe_LINKER_LIBS ${GLOG_LIBRARIES})
+
+find_package(OpenCV CONFIG REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+target_link_libraries(fcpp ${OpenCV_LIBRARIES})
+
+include_directories (
 	"${PROJECT_SOURCE_DIR}/../caffe-fast-rcnn/include"
 	"${PROJECT_SOURCE_DIR}/../lib/nms"
 	"${PROJECT_SOURCE_DIR}/../lib"
@@ -41,16 +70,12 @@ include_directories
 	/usr/local/cuda-7.5/include
 )
 
-target_link_libraries
-(
-	main
+target_link_libraries (
+	fcpp
 	/home/dibi/sources/py-faster-rcnn/caffe-fast-rcnn/build/lib/libcaffe.so
 	/home/dibi/sources/py-faster-rcnn/lib/nms/gpu_nms.so
 	/usr/lib/x86_64-linux-gnu//libboost_system.so
 	/usr/lib/x86_64-linux-gnu//libboost_python.so
 	/usr/lib/x86_64-linux-gnu/libglog.so
 	/usr/lib/x86_64-linux-gnu/libpython2.7.so
-	/usr/local/lib/libopencv_core.so
-	/usr/local/lib/libopencv_highgui.so
-	/usr/local/lib/libopencv_imgproc.so
 )
