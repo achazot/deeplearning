@@ -163,7 +163,7 @@
 
 	\item \textbf{ReLU} (Rectified Linear Unit) : cette couche utilise pour chacun de ses neurones un rectificateur linéaire comme f(x) = max(x, 0). Une telle fonction élémentaire est appliquée sur chacune des composantes du volume précédent. La dimension de la sortie est invariante, soit dans notre exemple [$32 \times 32 \times 12$]. 
 	\item \textbf{POOL} : sous-échantillonnage sur la hauteur et la largeur de la couche précédente. Le volume résultant sera par exemple dimensionné de la manière suivante : [$16 \times 16 \times 12$].
-	\item \textbf{FC} (Fully Connected) : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé en fonction de poids, de manière similaire aux \gls{MLNN}. La dimension en sortie sera [$1 \times 1 \times 10$].
+	\item \textbf{FC} (Fully Connected) : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé R-CNNen fonction de poids, de manière similaire aux \gls{MLNN}. La dimension en sortie sera [$1 \times 1 \times 10$].
 
       \end{itemize}
       Notons que l’entraînement d’un tel réseau, par descente de gradient, concerne les couches CONV et FC qui effectuent leurs calculs en fonction de poids et biais paramétrables. Les couches POOL et ReLU traitent leurs entrées de manière fixe, indépendamment de l’avancée de l’entraînement.
