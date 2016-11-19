@@ -18,5 +18,4 @@ pottedplant
 sheep
 sofa
 train
-tvmonitor
-
+screen

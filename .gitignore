@@ -40,3 +40,6 @@ CTestTestfile.cmake
 
 test_data/
 res/
+input/
+output/
+networks/

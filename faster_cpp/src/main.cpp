@@ -15,7 +15,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 
 #include "tools.hpp"
-#include "detector.hpp"
+#include "controllers/detector.hpp"
 
 using namespace caffe;
 using namespace std;
@@ -84,7 +84,6 @@ int main(int argc, char* argv[])
 		while(running)
 		{
 			cap >> src;
-			cv::imshow("src", src);
 			char kt[64];
 			sprintf(kt, "cam%08d.jpg", k++);
 			det.Detection(src, kt);

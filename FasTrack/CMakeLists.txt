@@ -1,9 +1,18 @@
 cmake_minimum_required (VERSION 2.8)
 
-project (faster_cpp)
+project (FasTrack)
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/Modules)
 
+
+# ------------------------------------------------------------------------------
+# create file tree
+# ------------------------------------------------------------------------------
+
+file(MAKE_DIRECTORY bin)
+file(MAKE_DIRECTORY input)
+file(MAKE_DIRECTORY output)
+file(MAKE_DIRECTORY networks)
 
 # ------------------------------------------------------------------------------
 # compiler settings
@@ -36,10 +45,11 @@ set(CMAKE_BUILD_TYPE Debug)
 # ------------------------------------------------------------------------------
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
+
 set(EXECUTABLE_OUTPUT_PATH bin/${CMAKE_BUILD_TYPE})
 
 add_executable (
-	fcpp ${SOURCES}
+	fastrack ${SOURCES}
 )
 
 # ------------------------------------------------------------------------------
@@ -48,7 +58,7 @@ add_executable (
 
 find_package(Boost 1.40 COMPONENTS filesystem system REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
-target_link_libraries(fcpp ${Boost_LIBRARIES})
+target_link_libraries(fastrack ${Boost_LIBRARIES})
 
 include("cmake/External/glog.cmake")
 include_directories(SYSTEM ${GLOG_INCLUDE_DIRS})
@@ -56,7 +66,7 @@ list(APPEND Caffe_LINKER_LIBS ${GLOG_LIBRARIES})
 
 find_package(OpenCV CONFIG REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
-target_link_libraries(fcpp ${OpenCV_LIBRARIES})
+target_link_libraries(fastrack ${OpenCV_LIBRARIES})
 
 include_directories (
 	"${PROJECT_SOURCE_DIR}/../caffe-fast-rcnn/include"
@@ -71,7 +81,7 @@ include_directories (
 )
 
 target_link_libraries (
-	fcpp
+	fastrack
 	/home/dibi/sources/py-faster-rcnn/caffe-fast-rcnn/build/lib/libcaffe.so
 	/home/dibi/sources/py-faster-rcnn/lib/nms/gpu_nms.so
 	/usr/lib/x86_64-linux-gnu/libglog.so

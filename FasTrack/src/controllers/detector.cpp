@@ -30,12 +30,23 @@ void Detector::read_classes(const string& path)
 	}
 }
 
-Detector::Detector(const string& model_file, const string& weights_file)
+Detector::Detector()
 {
-	net_ = new Net<float>(model_file, caffe::TEST);
-	net_->CopyTrainedLayersFrom(weights_file);
+	m_initialized = false;
 }
 
+bool Detector::initialized()
+{
+	return m_initialized;
+}
+
+void Detector::initialize(const string& model_file, const string& weights_file, const string& labels_file)
+{
+	read_classes(labels_file);
+	net_ = new Net<float>(model_file, caffe::TEST);
+	net_->CopyTrainedLayersFrom(weights_file);
+	m_initialized = true;
+}
 
 void Detector::Detection(const string& im_name)
 {
