@@ -75,15 +75,17 @@ include_directories (
 	/usr/local/include
 	/usr/include/python2.7
 	/home/dibi/sources/py-faster-rcnn/caffe-fast-rcnn/include
+	/home/lisa/sources/py-faster-rcnn/caffe-fast-rcnn/include
 	/usr/include/boost/numeric/odeint/external/mkl
 	/home/dibi/sources/py-faster-rcnn/lib/nms
+	/home/lisa/sources/py-faster-rcnn/lib/nms
 	/usr/local/cuda-7.5/include
 )
 
 target_link_libraries (
 	fastrack
-	/home/dibi/sources/py-faster-rcnn/caffe-fast-rcnn/build/lib/libcaffe.so
-	/home/dibi/sources/py-faster-rcnn/lib/nms/gpu_nms.so
+	$ENV{HOME}/sources/py-faster-rcnn/caffe-fast-rcnn/build/lib/libcaffe.so
+	$ENV{HOME}/sources/py-faster-rcnn/lib/nms/gpu_nms.so
 	/usr/lib/x86_64-linux-gnu/libglog.so
 	/usr/lib/x86_64-linux-gnu/libpython2.7.so
 )
