@@ -168,7 +168,11 @@ void Detector::Detection(cv::Mat cv_img, const string& im_name)
 				pred_per_class[j*5+k] = pred[(i*num+j)*5+k];
 		}
 		boxes_sort(num, pred_per_class, sorted_pred_cls);
-		_nms(keep, &num_out, sorted_pred_cls, num, 5, NMS_THRESH, 0);
+		#ifdef CPU_ONLY
+			std::cout << "TODO: CPU impl of NMS" << endl;
+		#else
+			_nms(keep, &num_out, sorted_pred_cls, num, 5, NMS_THRESH, 0);
+		#endif
 		vis_detections(cv_img, keep, num_out, sorted_pred_cls, CONF_THRESH, i);
 	}
 
