@@ -4,22 +4,28 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
+#include <vector>
+#include <iostream>
+#include <math.h>
+
+#define ABS(X) ( (X) > 0 ? (X) : (-(X)) )
 
 class HogwartsModel
 {
 private:
 	cv::Size m_size;
-	cv::HOGDescriptor m_hog;
+	std::vector<float> m_hog;
 	cv::Mat m_fghist;
 	cv::Mat m_bghist;
 
 public:
+	HogwartsModel ( );
 	HogwartsModel ( cv::Mat img );
 	~HogwartsModel ( );
-	float compare ( HogwartsModel with );
+	double compare ( HogwartsModel with );
 	void update ( HogwartsModel with, float learnCoeff );
 	cv::Size size ( );
-	cv::HOGDescriptor hog ( );
+	std::vector<float> hog ( );
 	cv::Mat fghist ( );
 	cv::Mat bghist ( );
 };

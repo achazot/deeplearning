@@ -3,6 +3,7 @@
 
 #include "controllers/parser.hpp"
 #include "controllers/detector.hpp"
+#include "controllers/hogwarts.hpp"
 #include "models/detectorResult.hpp"
 
 using namespace std;
@@ -42,28 +43,48 @@ int main ( int agrc, char *argv[] )
 
 				case Parser::CMD_TRACK:
 				{
-					// TODO:everything
+					// 468, 511, 60, 123
 
 					list<string> files;
 					cmdres = parser.getTrackArgs( files );
 					if (cmdres)
 					{
-						cv::Rect objpos(472, 505, 57, 132);
-						cv::Mat img = cv::imread(files.back());
+
+						cv::Mat img = cv::imread(files.front());
+						cv::Rect objpos;
+
+
+						if (detector.initialized())
+						{
+							detector.Detection(img);
+							cout << to_string(detector.getResults().size()) << " matches found." << endl;
+							objpos = detector.getResults().front().position();
+						}
+						else
+						{
+							//cout << "please load a network first" << endl;
+							//break;
+							objpos = cv::Rect(468, 511, 60, 123);
+						}
+
+
+						// init tracker on first image
+						Hogwarts tracker = Hogwarts( img, objpos );
+						files.pop_front();
+
 						rectangle(img, objpos, cv::Scalar(0,255,0), 2);
 						cv::imshow("vis",img);
-						cv::waitKey(50);
-						// init tracker on first image
-						files.pop_back();
+						cv::waitKey(10);
 
 						for (string f : files)
 						{
-							cv::Mat img = cv::imread(f);
+							img = cv::imread(f);
 							// update tracker on new image
+							objpos = tracker.update( img );
 
 							rectangle(img, objpos, cv::Scalar(0,255,0), 2);
 							cv::imshow("vis",img);
-							cv::waitKey(0);
+							cv::waitKey(10);
 						}
 					}
 					break;
@@ -85,7 +106,7 @@ int main ( int agrc, char *argv[] )
 						cout << to_string(detector.getResults().size()) << " matches found." << endl;
 						for (DetectorResult r : detector.getResults())
 						{
-							cout << to_string(r.position().x) << " " << to_string(r.position().y) << " " << to_string(r.position().width) << " " << to_string(r.position().height) << endl;
+							//cout << to_string(r.position().x) << " " << to_string(r.position().y) << " " << to_string(r.position().width) << " " << to_string(r.position().height) << endl;
 							rectangle(cv_img, r.position(), cv::Scalar(0,255,0), 2);
 							cv::imshow("vis",cv_img);
 							cv::waitKey(50);
