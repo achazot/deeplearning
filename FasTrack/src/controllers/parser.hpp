@@ -4,6 +4,7 @@
 #include <string>
 #include <sstream>
 #include <map>
+#include <list>
 #include <dirent.h>
 #include <boost/tokenizer.hpp>
 
@@ -18,6 +19,7 @@ public:
 		CMD_LOADNET,
 		CMD_QUIT,
 		CMD_DETECT,
+		CMD_TRACK,
 		CMD_AMBIGUOUS,
 		CMD_UNKNOWN
 	};
@@ -26,6 +28,8 @@ public:
 	int parseCommand ( string command );
 	bool getLoadnetArgs ( string &caffemodel, string &prototxt, string &labels );
 	bool getDetectArgs ( string &file );
+	bool getTrackArgs ( list<string> &files );
+
 
 private:
 	map<int, string> m_aliases;

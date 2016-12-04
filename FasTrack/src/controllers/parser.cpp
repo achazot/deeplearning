@@ -1,10 +1,23 @@
 #include "parser.hpp"
 
+bool compare_nocase ( const std::string& first, const std::string& second )
+{
+  unsigned int i=0;
+  while ( (i<first.length()) && (i<second.length()) )
+  {
+    if (tolower(first[i])<tolower(second[i])) return true;
+    else if (tolower(first[i])>tolower(second[i])) return false;
+    ++i;
+  }
+  return ( first.length() < second.length() );
+}
+
 Parser::Parser()
 {
-	m_aliases[CMD_LOADNET] = "loadnetwork loadnet ln lnet loadn";
-	m_aliases[CMD_QUIT] = "quit q exit x";
-	m_aliases[CMD_DETECT] = "detect dt det";
+	m_aliases[CMD_LOADNET] = "loadnetwork lnetwork";
+	m_aliases[CMD_QUIT] = "quit exit x";
+	m_aliases[CMD_DETECT] = "detect dt";
+	m_aliases[CMD_TRACK] = "track";
 	m_aliases[CMD_AMBIGUOUS] = "";
 
 }
@@ -34,6 +47,30 @@ int Parser::parseCommand ( string line )
 bool Parser::getDetectArgs ( string &file )
 {
 	file = m_args;
+	return true;
+}
+
+bool Parser::getTrackArgs ( list<string> &files )
+{
+	DIR *dir;
+	struct dirent *ent;
+	if ( (dir = opendir ( m_args.c_str() ) ) != NULL )
+	{
+	  while ( ( ent = readdir (dir) ) != NULL )
+	  {
+			string fname(ent->d_name);
+			if ( fname.find( ".jpg" ) != string::npos )
+				files.push_back( m_args + "/" + fname );
+	  }
+	  closedir (dir);
+	}
+	else
+	{
+	  return false;
+	}
+
+	files.sort( compare_nocase );
+
 	return true;
 }
 

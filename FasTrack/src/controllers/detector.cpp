@@ -1,7 +1,7 @@
 #include "detector.hpp"
 
 
-//Using for box sort
+//Used for box sort
 struct Info
 {
 	float score;
@@ -42,6 +42,14 @@ bool Detector::initialized()
 
 void Detector::initialize(const string& model_file, const string& weights_file, const string& labels_file)
 {
+	#ifdef CPU_ONLY
+		Caffe::set_mode(Caffe::CPU);
+	#else
+		int GPUID=0;
+		Caffe::SetDevice(GPUID);
+		Caffe::set_mode(Caffe::GPU);
+	#endif
+
 	read_classes(labels_file);
 	net_ = new Net<float>(model_file, caffe::TEST);
 	net_->CopyTrainedLayersFrom(weights_file);
@@ -56,11 +64,16 @@ void Detector::Detection(const string& im_name)
 			std::cout<<"Can not get the image file !"<<endl;
 			return ;
 	}
-	Detection(cv_img, im_name);
+	Detection(cv_img);
+}
+
+vector<DetectorResult> Detector::getResults ( )
+{
+	return m_results;
 }
 
 
-void Detector::Detection(cv::Mat cv_img, const string& im_name)
+void Detector::Detection(cv::Mat cv_img)
 {
 	float CONF_THRESH = 0.8;
 	float NMS_THRESH = 0.3;
@@ -87,7 +100,6 @@ void Detector::Detection(cv::Mat cv_img, const string& im_name)
 	int num_out;
 	cv::Mat cv_resized;
 
-	std::cout<<"imagename "<<im_name<<endl;
 	float im_info[3];
 	float data_buf[height*width*3];
 	float *boxes = NULL;
@@ -145,7 +157,7 @@ void Detector::Detection(cv::Mat cv_img, const string& im_name)
 	rois = net_->blob_by_name("rois")->cpu_data();
 	pred_cls = net_->blob_by_name("cls_prob")->cpu_data();
 	boxes = new float[num*4];
-	pred = new float[num*5*class_num];
+	pred = new float[num*5*m_classes.size()];
 	pred_per_class = new float[num*5];
 	sorted_pred_cls = new float[num*5];
 	keep = new int[num];
@@ -160,7 +172,7 @@ void Detector::Detection(cv::Mat cv_img, const string& im_name)
 
 
 	bbox_transform_inv(num, bbox_delt, pred_cls, boxes, pred, cv_img.rows, cv_img.cols);
-	for (int i = 1; i < class_num; i ++)
+	for (int i = 1; i < m_classes.size(); i ++)
 	{
 		for (int j = 0; j< num; j++)
 		{
@@ -173,16 +185,25 @@ void Detector::Detection(cv::Mat cv_img, const string& im_name)
 		#else
 			_nms(keep, &num_out, sorted_pred_cls, num, 5, NMS_THRESH, 0);
 		#endif
-		vis_detections(cv_img, keep, num_out, sorted_pred_cls, CONF_THRESH, i);
+
+		// save results (only if confidence > CONF_TRESHOLD)
+		for ( int k = 0; k < num_out; k++ )
+		{
+			if ( sorted_pred_cls[keep[k]*5+4] > CONF_THRESH )
+			{
+				m_results.push_back(DetectorResult(
+					cv::Rect(
+						cv::Point(sorted_pred_cls[keep[k]*5+0], sorted_pred_cls[keep[k]*5+1]),
+						cv::Point(sorted_pred_cls[keep[k]*5+2], sorted_pred_cls[keep[k]*5+3])
+					),								// position
+				 	i,								// class
+					sorted_pred_cls[keep[i]*5+4]	// confidence (score)
+				));
+			}
+		}
 	}
 
 
-	cv::imshow("vis",cv_img);
-	cv::waitKey(50);
-
-	//string cmd = "mkdir -p res/"+im_name;
-	//system(cmd.c_str());
-	//cv::imwrite("res/"+im_name,cv_img);
 	delete []boxes;
 	delete []pred;
 	delete []pred_per_class;
@@ -191,51 +212,6 @@ void Detector::Detection(cv::Mat cv_img, const string& im_name)
 
 }
 
-/*
- * ===  FUNCTION  ======================================================================
- *         Name:  vis_detections
- *  Description:  Visuallize the detection result
- * =====================================================================================
- */
-void Detector::vis_detections(cv::Mat image, int* keep, int num_out, float* sorted_pred_cls, float CONF_THRESH, int nclass)
-{
-	int i=0;
-	cv::Scalar color;
-	color = cv::Scalar(0,0,0);
-	if (nclass == 0) color = cv::Scalar(255,0,0);
-	if (nclass == 1) color = cv::Scalar(0,255,0);
-	if (nclass == 2) color = cv::Scalar(0,0,255);
-	if (nclass == 3) color = cv::Scalar(255,255,0);
-	if (nclass == 4) color = cv::Scalar(255,0,255);
-	if (nclass == 5) color = cv::Scalar(0,255,255);
-	if (nclass == 6) color = cv::Scalar(255,255,255);
-	if (nclass == 7) color = cv::Scalar(128,255,0);
-	if (nclass == 8) color = cv::Scalar(255,128,0);
-	if (nclass == 9) color = cv::Scalar(255,0,128);
-	if (nclass == 10) color = cv::Scalar(128,0,255);
-	if (nclass == 11) color = cv::Scalar(0,128,255);
-	if (nclass == 12) color = cv::Scalar(128,128,128);
-	if (nclass == 13) color = cv::Scalar(50,0,0);
-	if (nclass == 14) color = cv::Scalar(50,50,0);
-	if (nclass == 15) color = cv::Scalar(50,0,50);
-	if (nclass == 16) color = cv::Scalar(0,50,50);
-	if (nclass == 17) color = cv::Scalar(0,50,0);
-	if (nclass == 18) color = cv::Scalar(0,0,50);
-	if (nclass == 19) color = cv::Scalar(180,0,0);
-	if (nclass == 20) color = cv::Scalar(0,180,0);
-
-	while(sorted_pred_cls[keep[i]*5+4]>CONF_THRESH && i < num_out)
-	{
-		if(i>=num_out)
-			return;
-		cv::rectangle(image,cv::Point(sorted_pred_cls[keep[i]*5+0], sorted_pred_cls[keep[i]*5+1]),cv::Point(sorted_pred_cls[keep[i]*5+2], sorted_pred_cls[keep[i]*5+3]),color,2);
-
-		cv::Size ts = cv::getTextSize(m_classes[nclass], 5, 0.8, 1, NULL);
-		cv::putText(image, m_classes[nclass], cv::Point(sorted_pred_cls[keep[i]*5+0], sorted_pred_cls[keep[i]*5+1]), 5, 0.8, cv::Scalar(0,0,0), 1, CV_AA);
-
-		i++;
-	}
-}
 
 /*
  * ===  FUNCTION  ======================================================================
@@ -276,12 +252,12 @@ void Detector::bbox_transform_inv(int num, const float* box_deltas, const float*
 		height = boxes[i*4+3] - boxes[i*4+1] + 1.0;
 		ctr_x = boxes[i*4+0] + 0.5 * width;
 		ctr_y = boxes[i*4+1] + 0.5 * height;
-		for (int j=0; j< class_num; j++)
+		for (int j=0; j< m_classes.size(); j++)
 		{
-			dx = box_deltas[(i*class_num+j)*4+0];
-			dy = box_deltas[(i*class_num+j)*4+1];
-			dw = box_deltas[(i*class_num+j)*4+2];
-			dh = box_deltas[(i*class_num+j)*4+3];
+			dx = box_deltas[(i*m_classes.size()+j)*4+0];
+			dy = box_deltas[(i*m_classes.size()+j)*4+1];
+			dw = box_deltas[(i*m_classes.size()+j)*4+2];
+			dh = box_deltas[(i*m_classes.size()+j)*4+3];
 			pred_ctr_x = ctr_x + width*dx;
 			pred_ctr_y = ctr_y + height*dy;
 			pred_w = width * exp(dw);
@@ -290,7 +266,7 @@ void Detector::bbox_transform_inv(int num, const float* box_deltas, const float*
 			pred[(j*num+i)*5+1] = max(min(pred_ctr_y - 0.5* pred_h, img_height -1), 0);
 			pred[(j*num+i)*5+2] = max(min(pred_ctr_x + 0.5* pred_w, img_width -1), 0);
 			pred[(j*num+i)*5+3] = max(min(pred_ctr_y + 0.5* pred_h, img_height -1), 0);
-			pred[(j*num+i)*5+4] = pred_cls[i*class_num+j];
+			pred[(j*num+i)*5+4] = pred_cls[i*m_classes.size()+j];
 		}
 	}
 }
