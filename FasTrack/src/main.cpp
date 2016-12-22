@@ -9,7 +9,19 @@ using namespace std;
 
 int main ( int agrc, char *argv[] )
 {
-	// init
+
+  cout << "OpenCV version : " << CV_VERSION << endl;
+  cout << "Major version : " << CV_MAJOR_VERSION << endl;
+  cout << "Minor version : " << CV_MINOR_VERSION << endl;
+  cout << "Subminor version : " << CV_SUBMINOR_VERSION << endl;
+ 
+  if ( CV_MAJOR_VERSION < 3)
+  {
+      // Old OpenCV 2 code goes here. 
+  } else
+  {
+      // New OpenCV 3 code goes here. 
+  }	// init
 	#ifdef CPU_ONLY
 		Caffe::set_mode(Caffe::CPU);
 	#else

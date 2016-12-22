@@ -131,11 +131,11 @@ void Detector::Detection(cv::Mat cv_img, const string& im_name)
 
 	#ifdef CPU_ONLY
 		memcpy(input_blobs->mutable_cpu_data(), data_buf, sizeof(float) * input_blobs->count());
+	//	net_->blob_by_name("data")->set_cpu_data(data_buf);
 	#else
 		caffe_gpu_memcpy(sizeof(float)* input_blobs->count(), data_buf, input_blobs->mutable_gpu_data());
 	#endif
 
-	// net_->blob_by_name("data")->set_cpu_data(data_buf);
 	net_->blob_by_name("im_info")->set_cpu_data(im_info);
 	net_->ForwardFrom(0);
 	bbox_delt = net_->blob_by_name("bbox_pred")->cpu_data();

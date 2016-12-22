@@ -82,10 +82,21 @@ include_directories (
 	/usr/local/cuda-7.5/include
 )
 
-target_link_libraries (
-	fastrack
-	$ENV{HOME}/sources/py-faster-rcnn/caffe-fast-rcnn/build/lib/libcaffe.so
-	$ENV{HOME}/sources/py-faster-rcnn/lib/nms/gpu_nms.so
-	/usr/lib/x86_64-linux-gnu/libglog.so
-	/usr/lib/x86_64-linux-gnu/libpython2.7.so
-)
+
+if (CUDA_FOUND)
+	target_link_libraries (
+		fastrack
+		$ENV{HOME}/sources/py-faster-rcnn/caffe-fast-rcnn/build/lib/libcaffe.so
+		$ENV{HOME}/sources/py-faster-rcnn/lib/nms/gpu_nms.so
+		/usr/lib/x86_64-linux-gnu/libglog.so
+		/usr/lib/x86_64-linux-gnu/libpython2.7.so
+	)
+else ()
+	target_link_libraries (
+		fastrack
+		$ENV{HOME}/sources/py-faster-rcnn/caffe-fast-rcnn/build/lib/libcaffe.so
+		/usr/lib/x86_64-linux-gnu/libglog.so
+		/usr/lib/x86_64-linux-gnu/libpython2.7.so
+	)
+endif ()
+
