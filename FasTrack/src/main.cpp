@@ -85,7 +85,8 @@ int main ( int agrc, char *argv[] )
 						{
 							//cout << "please load a network first" << endl;
 							//break;
-							objpos = cv::Rect(468, 511, 60, 123);
+							//objpos = cv::Rect(468, 511, 60, 123); // crossing
+							objpos = cv::Rect(186, 212, 54, 111); // basketball
 						}
 
 

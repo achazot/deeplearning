@@ -4,6 +4,7 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/objdetect/objdetect.hpp>
+
 #include <vector>
 #include <iostream>
 #include <math.h>
@@ -13,8 +14,7 @@
 class HogwartsModel
 {
 private:
-	cv::Size m_size;
-	std::vector<float> m_hog;
+	cv::Mat m_hog;
 	cv::Mat m_fghist;
 	cv::Mat m_bghist;
 
@@ -24,8 +24,7 @@ public:
 	~HogwartsModel ( );
 	double compare ( HogwartsModel with );
 	void update ( HogwartsModel with, float learnCoeff );
-	cv::Size size ( );
-	std::vector<float> hog ( );
+	cv::Mat hog ( );
 	cv::Mat fghist ( );
 	cv::Mat bghist ( );
 };

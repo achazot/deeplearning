@@ -9,11 +9,14 @@ HogwartsModel::HogwartsModel ( cv::Mat img )
 {
 	cv::HOGDescriptor hog(cv::Size(32,16), cv::Size(8,8), cv::Size(4,4), cv::Size(4,4), 9);
 	std::vector<cv::Point> locations;
+	std::vector<float> descs;
 	cv::Mat grey;
 	cv::cvtColor(img, grey, CV_RGB2GRAY);
 
-	hog.compute(grey, m_hog, cv::Size(0,0), cv::Size(0,0), locations);
+	hog.compute(grey, descs, cv::Size(0,0), cv::Size(0,0), locations);
 
+	m_hog = cv::Mat(descs.size(),1,CV_32FC1);
+	memcpy(m_hog.data,descs.data(),descs.size()*sizeof(float));
 }
 
 HogwartsModel::~HogwartsModel ( )
@@ -24,31 +27,16 @@ HogwartsModel::~HogwartsModel ( )
 double HogwartsModel::compare ( HogwartsModel with )
 {
 	double distance = 0;
-	cv::Mat A(m_hog.size(),1,CV_32FC1);
-	memcpy(A.data,m_hog.data(),m_hog.size()*sizeof(float));
-	cv::Mat B(with.hog().size(),1,CV_32FC1);
-	memcpy(B.data,with.hog().data(),with.hog().size()*sizeof(float));
-
-	cv::Mat C = A-B;
-	C = C.mul(C);
-	cv::sqrt(C, C);
-	cv::Scalar rr = cv::sum(C);
-	distance = rr(0);
-
+	distance = cv::norm(m_hog, with.hog(), cv::NORM_L2, cv::noArray());
 	return distance;
 }
 
 void HogwartsModel::update ( HogwartsModel with, float learnCoeff )
 {
-
+	m_hog = (1.f-learnCoeff)*m_hog + with.hog() * learnCoeff;
 }
 
-cv::Size HogwartsModel::size ( )
-{
-	return m_size;
-}
-
-std::vector<float> HogwartsModel::hog ( )
+cv::Mat HogwartsModel::hog ( )
 {
 	return m_hog;
 }
