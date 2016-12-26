@@ -82,6 +82,7 @@ include_directories (
 	/home/dibi/sources/py-faster-rcnn/lib/nms
 	/home/lisa/sources/py-faster-rcnn/lib/nms
 	/usr/local/cuda-7.5/include
+	/usr/local/cuda-8.0/include
 )
 
 
