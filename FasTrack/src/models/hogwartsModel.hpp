@@ -20,7 +20,7 @@ private:
 
 public:
 	HogwartsModel ( );
-	HogwartsModel ( cv::Mat img );
+	HogwartsModel ( cv::Mat img, cv::Rect pos );
 	~HogwartsModel ( );
 	double compare ( HogwartsModel with );
 	void update ( HogwartsModel with, float learnCoeff );
