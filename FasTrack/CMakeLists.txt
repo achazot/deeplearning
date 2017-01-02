@@ -39,6 +39,7 @@ else ()
 	message( "--   -> Using CPU ONLY" )
 	add_definitions(-DCPU_ONLY)
 endif ()
+	add_definitions(-DCPU_ONLY)
 
 set(CMAKE_BUILD_TYPE Debug)
 
