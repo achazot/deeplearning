@@ -64,8 +64,10 @@ int main ( int agrc, char *argv[] )
 						{
 							//cout << "please load a network first" << endl;
 							//break;
-							//objpos = cv::Rect(468, 511, 60, 123); // crossing
-							objpos = cv::Rect(186, 212, 54, 111); // basketball
+							// objpos = cv::Rect(468, 511, 60, 123); // crossing
+							// objpos = cv::Rect(186, 212, 54, 111); // basketball
+							objpos = cv::Rect(446, 173, 73, 205); // bottles
+							// objpos = cv::Rect(512, 228, 79, 26); // birds1
 						}
 
 
@@ -105,10 +107,13 @@ int main ( int agrc, char *argv[] )
 						}
 						detector.Detection(image_path);
 						cout << to_string(detector.getResults().size()) << " matches found." << endl;
+						int n = 0;
 						for (DetectorResult r : detector.getResults())
 						{
-							//cout << to_string(r.position().x) << " " << to_string(r.position().y) << " " << to_string(r.position().width) << " " << to_string(r.position().height) << endl;
-							rectangle(cv_img, r.position(), cv::Scalar(0,255,0), 2);
+							cout << to_string(r.position().x) << " " << to_string(r.position().y) << " " << to_string(r.position().width) << " " << to_string(r.position().height) << endl;
+							rectangle(cv_img, r.position(), cv::Scalar(0,255,0), 1.5);
+							putText(cv_img, std::to_string(n++) + ":" + std::to_string(r.detclass()),
+								cvPoint(r.position().x, r.position().y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(128,128,128), 1, CV_AA);
 							cv::imshow("vis",cv_img);
 							cv::waitKey(50);
 						}
