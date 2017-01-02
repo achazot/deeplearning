@@ -59,7 +59,7 @@ bool Parser::getTrackArgs ( list<string> &files )
 	  while ( ( ent = readdir (dir) ) != NULL )
 	  {
 			string fname(ent->d_name);
-			if ( fname.find( ".jpg" ) != string::npos )
+			if ( fname.find( ".jpg" ) != string::npos || fname.find( ".png" ) != string::npos )
 				files.push_back( m_args + "/" + fname );
 	  }
 	  closedir (dir);
@@ -70,6 +70,8 @@ bool Parser::getTrackArgs ( list<string> &files )
 	}
 
 	files.sort( compare_nocase );
+
+	if (files.empty()) return false;
 
 	return true;
 }

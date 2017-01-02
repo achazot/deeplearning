@@ -82,7 +82,6 @@ include_directories (
 	/usr/include/boost/numeric/odeint/external/mkl
 	/home/dibi/sources/py-faster-rcnn/lib/nms
 	/home/lisa/sources/py-faster-rcnn/lib/nms
-	/usr/local/cuda-7.5/include
 	/usr/local/cuda-8.0/include
 )
 
