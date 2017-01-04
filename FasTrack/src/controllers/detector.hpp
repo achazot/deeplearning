@@ -22,8 +22,8 @@
 using namespace caffe;
 using namespace std;
 
-#define max(a, b) (((a)>(b)) ? (a) : (b))
-#define min(a, b) (((a)<(b)) ? (a) : (b))
+#define amax(a, b) (((a)>(b)) ? (a) : (b))
+#define amin(a, b) (((a)<(b)) ? (a) : (b))
 
 class Detector
 {

@@ -81,12 +81,12 @@ void Detector::Detection(cv::Mat cv_img)
 	const int  min_input_side=600;
 
 	cv::Mat cv_new(cv_img.rows, cv_img.cols, CV_32FC3, cv::Scalar(0,0,0));
-	int max_side = max(cv_img.rows, cv_img.cols);
-	int min_side = min(cv_img.rows, cv_img.cols);
+	int max_side = amax(cv_img.rows, cv_img.cols);
+	int min_side = amin(cv_img.rows, cv_img.cols);
 
 	float max_side_scale = float(max_side) / float(max_input_side);
 	float min_side_scale = float(min_side) /float( min_input_side);
-	float max_scale=max(max_side_scale, min_side_scale);
+	float max_scale=amax(max_side_scale, min_side_scale);
 
 	float img_scale = 1;
 
@@ -262,10 +262,10 @@ void Detector::bbox_transform_inv(int num, const float* box_deltas, const float*
 			pred_ctr_y = ctr_y + height*dy;
 			pred_w = width * exp(dw);
 			pred_h = height * exp(dh);
-			pred[(j*num+i)*5+0] = max(min(pred_ctr_x - 0.5* pred_w, img_width -1), 0);
-			pred[(j*num+i)*5+1] = max(min(pred_ctr_y - 0.5* pred_h, img_height -1), 0);
-			pred[(j*num+i)*5+2] = max(min(pred_ctr_x + 0.5* pred_w, img_width -1), 0);
-			pred[(j*num+i)*5+3] = max(min(pred_ctr_y + 0.5* pred_h, img_height -1), 0);
+			pred[(j*num+i)*5+0] = amax(amin(pred_ctr_x - 0.5* pred_w, img_width -1), 0);
+			pred[(j*num+i)*5+1] = amax(amin(pred_ctr_y - 0.5* pred_h, img_height -1), 0);
+			pred[(j*num+i)*5+2] = amax(amin(pred_ctr_x + 0.5* pred_w, img_width -1), 0);
+			pred[(j*num+i)*5+3] = amax(amin(pred_ctr_y + 0.5* pred_h, img_height -1), 0);
 			pred[(j*num+i)*5+4] = pred_cls[i*m_classes.size()+j];
 		}
 	}
