@@ -36,7 +36,7 @@ int main ( int agrc, char *argv[] )
 	Detector detector = Detector();
 
 	// read input
-	cout << "\x1b[32mFasTrack\x1b[0m pre-alpha 1." << endl;
+	cout << "\x1b[32mFasTrack\x1b[0m pre-alpha 2." << endl;
 	cout << "Please enter a command" << endl << " > ";
 	string line;
 	while(getline(cin,line))
@@ -64,8 +64,6 @@ int main ( int agrc, char *argv[] )
 
 				case Parser::CMD_TRACK:
 				{
-					// 468, 511, 60, 123
-
 					list<string> files;
 					cmdres = parser.getTrackArgs( files );
 					if (cmdres)
@@ -86,8 +84,8 @@ int main ( int agrc, char *argv[] )
 							//cout << "please load a network first" << endl;
 							//break;
 							// objpos = cv::Rect(468, 511, 60, 123); // crossing
-							// objpos = cv::Rect(186, 212, 54, 111); // basketball
-							objpos = cv::Rect(446, 173, 73, 205); // bottles
+							objpos = cv::Rect(186, 212, 54, 111); // basketball
+							// objpos = cv::Rect(446, 173, 73, 205); // bottles
 							// objpos = cv::Rect(512, 228, 79, 26); // birds1
 						}
 
@@ -136,7 +134,7 @@ int main ( int agrc, char *argv[] )
 							putText(cv_img, std::to_string(n++) + ":" + std::to_string(r.detclass()),
 								cvPoint(r.position().x, r.position().y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(128,128,128), 1, CV_AA);
 							cv::imshow("vis",cv_img);
-							cv::waitKey(50);
+							cv::waitKey(1);
 						}
 					}
 					else

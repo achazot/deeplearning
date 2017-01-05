@@ -27,18 +27,8 @@ HogwartsModel::HogwartsModel ( cv::Mat img, cv::Rect pos, bool calcHist )
 		int nbins = 32;
 		std::vector<cv::Mat> frame_planes;
 		cv::Mat img2 = img;
-		//cv::cvtColor(img, img2, CV_RGB2HSV);
 
 		cv::split( img2, frame_planes );
-
-		cv::imshow("i",img2);
-		cv::imshow("b",frame_planes[0]);
-		cv::imshow("g",frame_planes[1]);
-		cv::imshow("r",frame_planes[2]);
-		cv::moveWindow("i", 1400, 0);
-		cv::moveWindow("b", 1400, 200);
-		cv::moveWindow("g", 1400, 400);
-		cv::moveWindow("r", 1400, 600);
 
 		cv::Mat fg_mask = cv::Mat( img.size().height, img.size().width, CV_8U, cv::Scalar(0) );
 		fg_mask(cv::Rect(42,42,44,44)).setTo(cv::Scalar::all(255));
