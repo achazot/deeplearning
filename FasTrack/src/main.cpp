@@ -8,7 +8,6 @@
 
 using namespace std;
 
-
 int main ( int agrc, char *argv[] )
 {
 	Parser parser = Parser();
@@ -56,12 +55,13 @@ int main ( int agrc, char *argv[] )
 						{
 							detector.Detection(img);
 							cout << to_string(detector.getResults().size()) << " matches found." << endl;
+							if (detector.getResults().size() <= 0 ) break;
 							objpos = detector.getResults().front().position();
 						}
 						else
 						{
-							//cout << "please load a network first" << endl;
-							//break;
+							// cout << "please load a network first" << endl;
+							// break;
 							// objpos = cv::Rect(468, 511, 60, 123); // crossing
 							objpos = cv::Rect(186, 212, 54, 111); // basketball
 							// objpos = cv::Rect(446, 173, 73, 205); // bottles
@@ -77,13 +77,28 @@ int main ( int agrc, char *argv[] )
 						cv::imshow("vis",img);
 						cv::waitKey(10);
 
+						int frNum = 1;
 						for (string f : files)
 						{
 							img = cv::imread(f);
-							// update tracker on new image
-							objpos = tracker.update( img );
+
+							if (frNum++ % 30 == 0)
+							{
+								detector.Detection(img);
+								cout << to_string(detector.getResults().size()) << " matches found." << endl;
+								if (detector.getResults().size() <= 0 ) break;
+								objpos = detector.getResults().front().position();
+								tracker = Hogwarts( img, objpos );
+							}
+							else
+							{
+								// update tracker on new image
+								objpos = tracker.update( img );
+							}
 
 							rectangle(img, objpos, cv::Scalar(0,255,0), 2);
+							putText(img, std::to_string(detector.getResults().front().detclass()),
+								cvPoint(objpos.x, objpos.y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(128,128,128), 1, CV_AA);
 							cv::imshow("vis",img);
 							cv::waitKey(10);
 						}

@@ -75,6 +75,9 @@ vector<DetectorResult> Detector::getResults ( )
 
 void Detector::Detection(cv::Mat cv_img)
 {
+	if (!m_results.empty())
+		m_results.clear();
+
 	float CONF_THRESH = 0.8;
 	float NMS_THRESH = 0.3;
 	const int  max_input_side=1000;

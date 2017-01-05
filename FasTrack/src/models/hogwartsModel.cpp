@@ -81,12 +81,12 @@ double HogwartsModel::compareHist ( cv::Mat with )
 	return distance;
 }
 
-void HogwartsModel::update ( HogwartsModel with, float learnCoeff1, float learnCoeff2)
+void HogwartsModel::update ( HogwartsModel with, float FGLearn, float BGLearn, float HoGLearn )
 {
-	m_hog = (1.f-learnCoeff1)*m_hog + with.hog() * learnCoeff1;
+	m_hog = (1.f-HoGLearn)*m_hog + with.hog() * HoGLearn;
 
-	for (int i=0;i<3;i++) m_bghist[i] = m_bghist[i] * (1.f-learnCoeff2) + learnCoeff2 * with.bghist()[i];
-	for (int i=0;i<3;i++) m_fghist[i] = m_fghist[i] * (1.f-learnCoeff2) + learnCoeff2 * with.fghist()[i];
+	for (int i=0;i<3;i++) m_bghist[i] = m_bghist[i] * (1.f-BGLearn) + BGLearn * with.bghist()[i];
+	for (int i=0;i<3;i++) m_fghist[i] = m_fghist[i] * (1.f-FGLearn) + FGLearn * with.fghist()[i];
 }
 
 cv::Mat HogwartsModel::hog ( )

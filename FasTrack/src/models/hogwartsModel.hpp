@@ -25,7 +25,7 @@ public:
 	~HogwartsModel ( );
 	double compareHOG ( HogwartsModel with );
 	double compareHist ( cv::Mat with );
-	void update ( HogwartsModel with, float learnCoeff1, float learnCoeff2 );
+	void update ( HogwartsModel with, float FGLearn, float BGLearn, float HoGLearn );
 	cv::Mat computeHistogram( cv::Mat image, cv::Mat mask, int size );
 	cv::Mat hog ( );
 	cv::Mat* fghist ( );

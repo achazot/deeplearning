@@ -155,7 +155,7 @@ cv::Rect Hogwarts::update ( cv::Mat img )
 	m_previousPosition = cv::Rect((bx-64) * ixscale + m_previousPosition.x, (by-64) * iyscale + m_previousPosition.y, m_previousPosition.width, m_previousPosition.height);
 
 	// train
-	m_currentModel.update(HogwartsModel (subWindow, cv::Rect(bx-32, by-32, 64, 64), true), 0.0f, 0.04f);
+	m_currentModel.update(HogwartsModel (subWindow, cv::Rect(bx-32, by-32, 64, 64), true), 0.04f, 0.1f, 0.001f);
 
 	return m_previousPosition;
 }
