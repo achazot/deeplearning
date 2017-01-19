@@ -3,6 +3,7 @@
 
 #include "controllers/parser.hpp"
 #include "controllers/detector.hpp"
+#include "controllers/surfer.hpp"
 #include "controllers/hogwarts.hpp"
 #include "models/detectorResult.hpp"
 
@@ -91,9 +92,12 @@ int main ( int agrc, char *argv[] )
 
 
 						// init tracker on first image
+						Surfer surfer;
+						surfer.initialize(img(objpos));
 						Hogwarts tracker = Hogwarts( img, objpos );
 						files.pop_front();
 
+						cv::imshow("ref",img(objpos));
 						rectangle(img, objpos, cv::Scalar(0,255,0), 2);
 						cv::imshow("vis",img);
 						cv::waitKey(10);
@@ -103,23 +107,20 @@ int main ( int agrc, char *argv[] )
 						{
 							img = cv::imread(f);
 
-							if (frNum++ % 30 == 0)
+							// update tracker on new image
+							objpos = tracker.update( img );
+							float score = surfer.match(img, objpos);
+							cout << "Score : " << score << endl;
+
+							if (score < 0.1f)
 							{
-								detector.Detection(img);
-								cout << to_string(detector.getResults().size()) << " matches found." << endl;
-								if (detector.getResults().size() <= 0 ) break;
-								objpos = detector.getResults().front().position();
-								tracker = Hogwarts( img, objpos );
-							}
-							else
-							{
-								// update tracker on new image
-								objpos = tracker.update( img );
+								//TODO: redetect
+								surfer.initialize(img(objpos));
 							}
 
 							rectangle(img, objpos, cv::Scalar(0,255,0), 2);
-							putText(img, std::to_string(detector.getResults().front().detclass()),
-								cvPoint(objpos.x, objpos.y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(128,128,128), 1, CV_AA);
+							// putText(img, std::to_string(detector.getResults().front().detclass()),
+							//	cvPoint(objpos.x, objpos.y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(128,128,128), 1, CV_AA);
 							cv::imshow("vis",img);
 							cv::waitKey(10);
 						}

@@ -14,7 +14,7 @@
 	\item la classification de contenu audio-visuel au sens large, allant de l'image au sujet d'un texte ou d'une revue
 	\item le filtrage de contenus, tels que les spams ou les intrusions sur les systèmes d'informations
 	\item le tri et la sélection d'informations les plus pertinentes à délivrer via la publicité ou les flux de contenus des médias sociaux
-	\item l'analyse et la prédiction de sentiments
+	\item l'analyse et la prédiction de sentiments d'échantillons de population 
       \end{itemize}
 
       Plus précisément, ce concept recouvre les systèmes constitués de paramètres réglables, typiquement vus sous la forme de
@@ -116,7 +116,7 @@
       Les problèmes traditionnels de classification nécessitent des modèles plus élaborés, car ils sont souvent insolubles à l'aide de simples régressions linéaires. On dit que l'ensemble des éléments constituant nos classes
       sont non linéairement séparables (les résultats de la fonction XOR par exemple). On organise alors les neurones formels en successions de couches, ce qui permettra de diviser le plan en $n$ sous-ensembles, avec $n >2$.
       On appelle typiquement \textit{couche d'entrée} la première couche du réseau, \textit{couches cachées} les couches internes au réseau et \textit{couche de sortie} la dernière couche.
-      Issue du site de tensorflow\cite{Bib_PlaygroundTF} (la librairie de calcul de machine learning développée par Google\cite{Bib_TenFlo}), la capture d'écran\ref{fig:c1p2s2} illustre les jeux de données pour lesquelles les régressions linéaires s'avèrent inefficaces.
+      Issue du site de tensorflow\cite{Bib_PlaygroundTF} (une librairie de calcul de machine learning développée par Google\cite{Bib_TenFlo}), la capture d'écran\ref{fig:c1p2s2} illustre les jeux de données pour lesquelles les régressions linéaires s'avèrent inefficaces.
 
       \begin{figure}[H]
 	  \centering
@@ -163,7 +163,7 @@
 
 	\item \textbf{ReLU} (Rectified Linear Unit) : cette couche utilise pour chacun de ses neurones un rectificateur linéaire comme f(x) = max(x, 0). Une telle fonction élémentaire est appliquée sur chacune des composantes du volume précédent. La dimension de la sortie est invariante, soit dans notre exemple [$32 \times 32 \times 12$]. 
 	\item \textbf{POOL} : sous-échantillonnage sur la hauteur et la largeur de la couche précédente. Le volume résultant sera par exemple dimensionné de la manière suivante : [$16 \times 16 \times 12$].
-	\item \textbf{FC} (Fully Connected) : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé R-CNNen fonction de poids, de manière similaire aux \gls{MLNN}. La dimension en sortie sera [$1 \times 1 \times 10$].
+	\item \textbf{FC} (Fully Connected) : comme son nom l’indique, les unités de cette couche sont connectées à tous les neurones de la couche précédente. Le vecteur résultant est calculé en fonction de poids, de manière similaire aux \gls{MLNN}. La dimension en sortie sera [$1 \times 1 \times 10$].
 
       \end{itemize}
       Notons que l’entraînement d’un tel réseau, par descente de gradient, concerne les couches CONV et FC qui effectuent leurs calculs en fonction de poids et biais paramétrables. Les couches POOL et ReLU traitent leurs entrées de manière fixe, indépendamment de l’avancée de l’entraînement.

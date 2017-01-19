@@ -25,10 +25,11 @@ class Surfer
 	public:
 		Surfer();
 		Surfer(int hessian);
-		void initialize(Mat& object);
+		void initialize(Mat object);
 		float match(Mat& scene, Rect position);
 
 	private:
+		Mat ref_object; 
 		int hessian_value = 800; 	
 		std::vector<KeyPoint> obj_keypoints, scene_keypoints; 
 		Mat obj_descriptors, scene_descriptors; 
