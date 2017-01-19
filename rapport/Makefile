@@ -3,6 +3,7 @@ all:
 	@inkscape -D -z --file=c1p1s2_schema.svg --export-pdf=c1p1s2_schema.pdf --export-latex > /dev/null 2>&1
 	@inkscape -D -z --file=c1p2s1_neuron.svg --export-pdf=c1p2s1_neuron.pdf --export-latex > /dev/null 2>&1
 	@inkscape -D -z --file=c1p2s1_points.svg --export-pdf=c1p2s1_points.pdf --export-latex > /dev/null 2>&1
+	@inkscape -D -z --file=c2p1s1.svg --export-pdf=c2p1s1_rcnn.pdf --export-latex > /dev/null 2>&1
 	@echo "\033[0;32m[ 25%]\033[0m First pass"
 	@pdflatex -file-line-error DeepLearning.tex > /dev/null
 	@echo "\033[0;32m[ 50%]\033[0m Creating glossary"
