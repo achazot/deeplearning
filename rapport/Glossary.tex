@@ -3,7 +3,7 @@
 
 \newglossaryentry{training}
 {
-  name={entraînement},
+  name={Entraînement},
 	description={Lorem ipsum dolor sit amet}
 }
 
@@ -30,4 +30,46 @@
 {
   name={CIFAR 10},
 	description={Créée par Alex Krizhevsky, Vinod Nair, et Geoffrey Hinton, CIFAR 10 est une base de données adaptée aux problèmes de vision par ordinateur. Elle contient 60 000 images étiquetées selon 10 classes (6000 images par classe) typiquement de dimensions 32x32. Learning Multiple Layers of Features from Tiny Images, Alex Krizhevsky, 2009}
+}
+\newglossaryentry{R-CNN}
+{
+  name={R-CNN},
+	description={Region-based Convolutional Neural Network}
+}
+\newglossaryentry{intimg}
+{
+  name={images intégrales},
+	description={Formellement, l'image intégrale $I_{\Sigma}(x)$ du point x ayant pour coordonnées $(x,y)^{T}$ est obtenue selon la formule suivante : 
+	\\
+	      \begin{center}
+		$I_{\Sigma}($x$) = \sum\limits_{i=0}^{i \leq x}{\sum\limits_{j=0}^{j \leq y}{I(i, j)}}$
+	      \end{center}
+	 \vspace{0.5cm}
+         Cela représente la somme des intensités de pixels ($I$) comprises dans un rectangle dont la diagonale est délimitée par l'origine de l'image d'entrée (généralement en haut et à gauche) et le point x.
+         En pratique, cette technique est appréciée pour sa rapidité. En effet, pour calculer n'importe quelle somme d'intensité de pixels dans une zone rectangulaire à partir d'une image intégrale, il suffit alors d'effectuer trois additions (et quatre accès mémoire)}
+}
+\newglossaryentry{hessMat}
+{
+  name={approximation du déterminant de la matrice de Hesse},
+	description={Dans SURF, une matrice de Hesse pour un point x = $(x,y)$ à l'échelle $\sigma$ est donnée par : 
+	\\
+	      \begin{center}
+	      $\cal{H}($x$,\sigma) = \begin{bmatrix} 
+					$$\cal{L}$$_{xx}($x$,\sigma) & $$\cal{L}$$_{xy}($x$,\sigma) \\ 
+					$$\cal{L}$$_{yx}($x$,\sigma) & $$\cal{L}$$_{yy}($x$,\sigma)
+				      \end{bmatrix}$ 
+	      \end{center} 
+	\vspace{0.5cm}
+	où $\cal{L}$$_{ij}($x$,\sigma)$ est le produit de convolution de la dérivée partielle seconde de la Gaussienne $\frac{\partial^2}{\partial i \partial j}g(\sigma)$ avec l'image $\cal{I}$ au point x.
+	L'approximation introduite par SURF consiste à simplifier les valeurs contenues dans les filtres issus des Gaussiennes de second ordre par des box-filters. Les poids obtenus mènent au calcul de déterminant suivant : 
+	\\
+	      \begin{center}
+	      det$($$\cal{H}$$_{approx}) = D_{xx}D_{yy} - (0.9D_{xy})^2$
+	      \end{center}
+	\vspace{0.5cm}
+	avec $D_{ij}$ l'approximation de $\cal{L}$$_{ij}$ par simplification de la Gaussienne en box-filter. 
+	\\
+	0.9 est ici une valeur qui pallie l'erreur introduite par cette approximation pour $\sigma = 1.2$ et pour un box-filter de taille 9 x 9.
+	\\
+	Pour d'avantage de précisions concernant la technique employée par SURF, ainsi que sur les principes théoriques qui sous-tendent cette approche, nous renvoyons le lecteur au papier officiel de SURF \cite{Bib_SURF}}
 }
