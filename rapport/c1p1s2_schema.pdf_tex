@@ -1,4 +1,4 @@
-%% Creator: Inkscape inkscape 0.91, www.inkscape.org
+%% Creator: Inkscape inkscape 0.48.5, www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
 %% Accompanies image file 'c1p1s2_schema.pdf' (pdf, eps, ps)
 %%
@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{683.72912bp}%
+    \setlength{\unitlength}{683.72911224bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -49,6 +49,6 @@
   \global\let\svgscale\undefined%
   \makeatother%
   \begin{picture}(1,0.4628285)%
-    \put(0,0){\includegraphics[width=\unitlength,page=1]{c1p1s2_schema.pdf}}%
+    \put(0,0){\includegraphics[width=\unitlength]{c1p1s2_schema.pdf}}%
   \end{picture}%
 \endgroup%

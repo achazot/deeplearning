@@ -18,6 +18,10 @@
 \usepackage{parskip}
 \usepackage{fancyhdr}
 \usepackage{vmargin}
+\usepackage{sectsty}
+\usepackage{listings}
+\usepackage{xcolor}
+
 \setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 
 \title{Apprentissage profond et suivi d'objets}
@@ -44,8 +48,28 @@
 \author{}
 \setlength{\parindent}{15pt}
 
-\begin{document}
 
+%Syntaxe 
+
+\definecolor{comments}{rgb}{0,0.15,0}
+\lstset { %
+    language=C++,
+    backgroundcolor=\color{black!5}, % set backgroundcolor
+    basicstyle=\footnotesize,% basic font setting
+    identifierstyle=\ttfamily,
+    keywordstyle=\color[rgb]{0,0,1},
+    commentstyle=\color[rgb]{0.541, 0.608, 0.059},
+    stringstyle=\color[rgb]{0.627, 0.126, 0.941},
+    numberstyle=\color[rgb]{0.205, 0.142, 0.73},
+    tabsize=2,
+}
+
+
+
+
+\begin{document}
+    
+  
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %                      Title Page                   %
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -63,8 +87,8 @@
   % 	                Chapters                      %
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  \input{Chapter1} % Apprentissage profond
-  \input{Chapter2} % Caffe
+  \input{Chap/Chapter1} % Apprentissage profond
+  \input{Chap/Chapter2} % Caffe
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   % 	                Glossary                      %
