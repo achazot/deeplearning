@@ -40,7 +40,6 @@ else ()
 	message( "--   -> Using CPU ONLY" )
 	add_definitions(-DCPU_ONLY)
 endif ()
-	add_definitions(-DCPU_ONLY)
 
 set(CMAKE_BUILD_TYPE Debug)
 
@@ -103,4 +102,3 @@ else ()
 		/usr/lib/x86_64-linux-gnu/libpython2.7.so
 	)
 endif ()
-

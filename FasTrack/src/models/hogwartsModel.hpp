@@ -21,7 +21,7 @@ private:
 
 public:
 	HogwartsModel ( );
-	HogwartsModel ( cv::Mat img, cv::Rect pos, bool calcHist = false );
+	HogwartsModel ( cv::Mat& img, cv::Rect& pos, bool calcHist = false );
 	~HogwartsModel ( );
 	double compareHOG ( HogwartsModel with );
 	double compareHist ( cv::Mat with );

@@ -1,6 +1,8 @@
 
 #include "hogwarts.hpp"
 
+#define SHOWDEBUG 1
+
 Hogwarts::Hogwarts ( cv::Mat img, cv::Rect position )
 {
 	// get smaller window surrounding object
@@ -14,7 +16,8 @@ Hogwarts::Hogwarts ( cv::Mat img, cv::Rect position )
 	cv::resize(subWindow, subWindow, cv::Size(128, 128));
 
 	// create first tracking model (calculate HoG and color histograms)
-	m_currentModel = HogwartsModel(subWindow, cv::Rect(32, 32, 64, 64), true);
+	cv::Rect center(32, 32, 64, 64);
+	m_currentModel = HogwartsModel(subWindow, center, true);
 	// set previous position
 	m_previousPosition = position;
 }
@@ -36,8 +39,8 @@ cv::Rect Hogwarts::update ( cv::Mat img )
 	cv::resize(subWindow, subWindow, cv::Size(128, 128));
 
 	// calc inverse position transform
-	float ixscale = swPos.width / 128.f;
-	float iyscale = swPos.height / 128.f;
+	double ixscale = swPos.width / 128.0;
+	double iyscale = swPos.height / 128.0;
 
 
 
@@ -61,8 +64,12 @@ cv::Rect Hogwarts::update ( cv::Mat img )
 	cv::Mat hislresp(128, 128, CV_64FC1, cv::Scalar(0));
 	//cv::Mat hislintg;
 	cv::normalize( hislhmap, hislhmap, 0, 1, cv::NORM_MINMAX, -1, cv::Mat() );
-	cv::imshow("hislhmap", hislhmap);
-	cv::moveWindow("hislhmap",500,0);
+
+	if (SHOWDEBUG == 1)
+	{
+		cv::imshow("hislhmap", hislhmap);
+		cv::moveWindow("hislhmap",500,0);
+	}
 
 	// cv::integral(hislhmap, hislintg);
 	// cv::normalize( hislintg, hislintg, 0, 1, cv::NORM_MINMAX, -1, cv::Mat() );
@@ -92,11 +99,13 @@ cv::Rect Hogwarts::update ( cv::Mat img )
 
 	cv::normalize( hislresp, hislresp, 0, 1, cv::NORM_MINMAX, -1, cv::Mat() );
 
-	cv::imshow("hislresp", hislresp);
-	cv::moveWindow("hislresp",500,200);
+	if (SHOWDEBUG == 1)
+	{
+		cv::imshow("hislresp", hislresp);
+		cv::moveWindow("hislresp",500,200);
+	}
 
-
-	// Multithreaded HoG calculation over whole subwindow (128x128) using patches of 64x64
+	// Multithreaded HoG calculation over whole subwindow (128x128) using patches of 32x32
 
 	cv::Mat hoglhmap(64,64, CV_64FC1, cv::Scalar(0));
 	std::thread t[16];
@@ -121,18 +130,32 @@ cv::Rect Hogwarts::update ( cv::Mat img )
 	cv::Mat hoglresp(128,128, CV_64FC1, cv::Scalar(0));
 	for ( int x = 0; x < 64; x++ )
 	for ( int y = 0; y < 64; y++ )
-		hoglresp.at<double>(y + 32, x + 32) = 1.0 - hoglhmap.at<double>(y, x);
+		hoglresp.at<double>(y + 32 - floor(step/2), x + 32 - floor(step/2)) = 1.0 - hoglhmap.at<double>(y, x);
 
-	cv::imshow("hoglresp", hoglresp);
-	cv::moveWindow("hoglresp",500,400);
+	//cv::GaussianBlur(hoglresp,hoglresp, cv::Size(63,63), 0);
+	//cv::normalize( hoglresp, hoglresp, 0, 1, cv::NORM_MINMAX, -1, cv::Mat() );
 
+	if (SHOWDEBUG == 1)
+	{
+		cv::imshow("hoglresp", hoglresp);
+		cv::moveWindow("hoglresp",500,400);
+	}
 
 	// Mix the two feature likelihood maps
 	cv::Mat finalmap(128,128, CV_64FC1, cv::Scalar(0));
 	finalmap = hoglresp * 0.4f + hislresp * 0.6f;
+	
+	cv::GaussianBlur(finalmap,finalmap, cv::Size(5,5), 0);
+	cv::normalize( finalmap, finalmap, 0, 1, cv::NORM_MINMAX, -1, cv::Mat() );
 
-	cv::imshow("finalmap", finalmap);
-	cv::moveWindow("finalmap",500,600);
+	if (SHOWDEBUG == 1)
+	{
+		cv::imshow("finalmap", finalmap);
+		cv::moveWindow("finalmap",500,600);
+	}
+	
+
+
 
 	// search best value
 	double bres = 0;
@@ -152,10 +175,22 @@ cv::Rect Hogwarts::update ( cv::Mat img )
 	}
 
 	// save new position
-	m_previousPosition = cv::Rect((bx-64) * ixscale + m_previousPosition.x, (by-64) * iyscale + m_previousPosition.y, m_previousPosition.width, m_previousPosition.height);
+	m_previousPosition = cv::Rect((bx-64.f) * ixscale + m_previousPosition.x, (by-64.f) * iyscale + m_previousPosition.y, m_previousPosition.width, m_previousPosition.height);
+
+	cv::Rect swPosT (cv::Point(MAX(0, m_previousPosition.x - m_previousPosition.width * 0.5f),
+	                           MAX(0, m_previousPosition.y - m_previousPosition.height * 0.5f) ),
+	                 cv::Point(MIN(img.size().width, m_previousPosition.x + m_previousPosition.width * 1.5f),
+	                           MIN(img.size().height, m_previousPosition.y + m_previousPosition.height * 1.5f)));
+	
+	cv::Mat subWindowT = img(swPosT);
+
+	// resize to 128x128
+	cv::resize(subWindowT, subWindowT, cv::Size(128, 128));
 
 	// train
-	m_currentModel.update(HogwartsModel (subWindow, cv::Rect(bx-32, by-32, 64, 64), true), 0.04f, 0.1f, 0.001f);
+	cv::Rect np (32, 32, 64, 64);
+	HogwartsModel trainModel (subWindowT, np, true);
+	m_currentModel.update(trainModel, 0.04f, 0.02f, 0.0f);
 
 	return m_previousPosition;
 }
@@ -166,7 +201,8 @@ void Hogwarts::hogThread(int x, int y, HogwartsModel cur, cv::Mat img, cv::Mat &
 	for (int ix = 0; ix < 16; ix+=step)
 	for (int iy = 0; iy < 16; iy+=step)
 	{
-		HogwartsModel newmodel = HogwartsModel (img, cv::Rect(x*4+ix, y*4+iy, 64, 64));
+		cv::Rect npos(x*4+ix, y*4+iy, 64, 64);
+		HogwartsModel newmodel = HogwartsModel (img, npos);
 		double dres = newmodel.compareHOG(cur);
 
 		for (int jx = 0; jx < step; jx++)

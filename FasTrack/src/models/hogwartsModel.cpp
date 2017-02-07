@@ -5,7 +5,7 @@ HogwartsModel::HogwartsModel ( )
 {
 }
 
-HogwartsModel::HogwartsModel ( cv::Mat img, cv::Rect pos, bool calcHist )
+HogwartsModel::HogwartsModel ( cv::Mat& img, cv::Rect& pos, bool calcHist )
 {
 	// HoG computing
 	cv::HOGDescriptor hog(cv::Size(16,16), cv::Size(8,8), cv::Size(4,4), cv::Size(4,4), 9);
@@ -76,7 +76,7 @@ double HogwartsModel::compareHist ( cv::Mat with )
 			histScore[i] += (roi_hist[i].at<float>(ib) * (m_fghist[i].at<float>(ib) / (m_fghist[i].at<float>(ib) + m_bghist[i].at<float>(ib) + lambda)) );
 		}
 	}
-	distance = histScore[2];// + histScore[1] + histScore[2];
+	distance = histScore[0] + histScore[1] + histScore[2];
 
 	return distance;
 }

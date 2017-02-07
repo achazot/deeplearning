@@ -52,6 +52,9 @@ bool Parser::getDetectArgs ( string &file )
 
 bool Parser::getTrackArgs ( list<string> &files )
 {
+	if (m_args.empty())
+		return true;
+
 	DIR *dir;
 	struct dirent *ent;
 	if ( (dir = opendir ( m_args.c_str() ) ) != NULL )

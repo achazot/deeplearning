@@ -1,4 +1,4 @@
-#ifndef SURFER_HPP 
+#ifndef SURFER_HPP
 #define SURFER_HPP
 
 #include <iostream>
@@ -18,9 +18,9 @@
 
 using namespace cv;
 using namespace cv::xfeatures2d;
-using namespace std; 
+using namespace std;
 
-class Surfer 
+class Surfer
 {
 	public:
 		Surfer();
@@ -29,10 +29,10 @@ class Surfer
 		float match(Mat& scene, Rect position);
 
 	private:
-		Mat ref_object; 
-		int hessian_value = 800; 	
-		std::vector<KeyPoint> obj_keypoints, scene_keypoints; 
-		Mat obj_descriptors, scene_descriptors; 
+		Mat ref_object;
+		int hessian_value; 	
+		std::vector<KeyPoint> obj_keypoints, scene_keypoints;
+		Mat obj_descriptors, scene_descriptors;
 };
 
-#endif // SURFER_HPP 
+#endif // SURFER_HPP
