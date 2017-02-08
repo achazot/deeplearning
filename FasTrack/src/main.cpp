@@ -245,7 +245,7 @@ int main ( int agrc, char *argv[] )
 						// putText(img, std::to_string(detector.getResults().front().detclass()),
 						//	cvPoint(objpos.x, objpos.y), cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, cv::Scalar(128,128,128), 1, CV_AA);
 						cv::imshow("vis",vis_img);
-						cv::waitKey(20);
+						cv::waitKey(10);
 
 						detector.setConfTresh(confidence_treshold);
 					}

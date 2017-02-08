@@ -1,0 +1,24 @@
+\section*{Introduction}
+\phantomsection
+\addcontentsline{toc}{section}{Introduction}
+
+
+	Aujourd’hui le Deep Learning ou apprentissage profond est un domaine de l’intelligence artificielle qui soulève à la fois une véritable émulation scientifique, de répétitifs engouements médiatiques \cite{Bib_mondepix} \cite{Bib_usinedigitale} \cite{Bib_silicon} ainsi que des questionnements sociétaux. 
+	
+	En cela que ses champs applicatifs semblent intarissables et aussi qu’il met depuis peu en concurrence la capacité de "réflexion" de la machine avec celle de l’homme, ce vaste sujet n’a pas fini de passionner, de pousser à la création voire d’inquiéter.  
+
+	Cette technologie s’intègre massivement lorsqu’il est question de reproduire la compréhension humaine des sens, notamment la lecture et le traitement de signaux audiovisuels. Cela s’explique d’une part par les enjeux qui résident dans l’amélioration du traitement automatique de ces derniers, et d’autre part parce que l’essor que connaît actuellement le Deep Learning semble intrinsèquement lié à ces applications. 
+
+	Dans le cadre de la reconnaissance d’objets issus d’un contenu visuel, le recours au Deep Learning est en train de bouleverser la démarche traditionnelle du traitement des données. Cette démarche s’est forgée sur des techniques robustes, comparativement peu coûteuses mais pour la plupart bien moins efficaces. L’enthousiasme récent pour cette technique connue depuis plus de trente ans s’explique en partie par des puissances de calcul suffisantes dans les milieux scientifiques et professionnels, ainsi que par une large démocratisation de l’informatique et de l’Internet, capables de fournir des jeux de données exploitables de grande envergure. 
+
+	Ce travail s’inscrit dans la problématique de détection et suivi d’un objet d’intérêt en temps réel en s’appuyant notamment sur le Deep Learning. La démarche entamée à cet effet s’articule donc autours de trois  disciplines de la vision par ordinateur, à savoir:
+	
+	\begin{itemize}
+		\item{La détection}
+		\item{La classification}
+		\item{Le suivi}
+	\end{itemize}
+	
+	En ce qui concerne les deux premiers points, les résultats de recherches récentes montrent que le Deep Learning est à la fois la méthode la plus précise, mais aussi la plus rapide \cite{Bib_ilsvrc}. Pour ce qui est du suivi d’objet, il est cependant convenu que des méthodes plus classiques nécessitent des puissances de calcul bien moindres pour des résultats comparables \cite{Bib_votc}. Pour satisfaire la contrainte de temps réel, nous nous sommes donc tournés vers une solution alliant la précision des réseaux neuronaux avec la rapidité de méthodes telles que l’histogramme de gradient et l’histogramme colorimétrique pondéré. 
+	
+	La première partie de ce rapport est un état de l’art de l’apprentissage profond appliqué à l’analyse d’images. Dans un deuxième temps, nous nous employons à décrire les méthodes intégrées à notre solution. Enfin nous établirons le fonctionnement général ainsi que les résultats de notre solution implémentée en C++.

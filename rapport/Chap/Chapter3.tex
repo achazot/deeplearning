@@ -1,0 +1,74 @@
+\chapter{Vue d'ensemble}
+
+	\section{Fonctionnement général}
+
+		\subsection{Notre approche}
+			A la problématique de la détection et suivi d'objets en temps réel, nous proposons une solution basée sur les techniques citées dans le chapitre 2, qui allie la précision des réseaux neuronaux avec la rapidité de méthodes plus classiques de traitement de l'image.
+			A l'image d'un classifieur conventionnel, notre solution est capable de détecter et de suivre tout type d'objet tant que le réseau neuronal du détecteur peut être entraîné à le reconnaitre. 
+			
+			
+		\subsection{Algorithme global}
+			Le fonctionnement de notre solution peut se résumer dans l'algorithme suivant:
+		
+			\begin{lstlisting}
+			
+			// detection de la position d'objets d'interet grace au
+			// reseau de neurones et affichage des objets detectes
+			resultats <- CNN_detection()
+			afficher(image, resultats)
+			
+			// choix de l'utilisateur quant a l'objet a suivre
+			position <- resultats[choix_utilisateur]
+			
+			// initialisation de SURF et du tracker
+			surf.initialize( position )  
+			surf2.initialize( position )  
+			tracker.initialize( position )
+			
+			Pour toute image dans flux_images faire : 
+			  // on recupere la nouvelle position de l'objet 
+			  position <- tracker.update( image )
+			  // calcul du score d'apres le traitement de SURF
+			  score <- surf.match( img, position )
+			  
+			  Si score < SCORE_THRESHOLD
+			    
+			    // on lance une redetection avec le reseau de neurones
+			    resultats <- CNN_detection()
+			    Pour tout resultat dans resultats
+			    
+			      // On valide l'objet grace a un precedant
+			      // resultat satisfaisant (au vu du score)
+			      score <- surf2.match( resultat.position )
+			      
+			      Si score > best_score
+			        tracker.initialize ( resultat.position )
+			        position <- resultat.position
+			      Fin si
+			      
+			    Fin pour
+			    
+			    // on reinitialise SURF et le tracker
+			    surf.initialize( position )  
+			    tracker.initialize( position )
+			  
+			  Sinon
+			  
+			    // On reinitialise la deuxieme instance de surf
+			    // permettant de valider la redection
+			    surf2.initialize( position )  
+			  
+			  Fin si
+			
+			  // On affiche le resultat du suivi
+			  afficher(image, resultats)
+			
+			Fin pour
+			
+			\end{lstlisting}
+			
+	\section{Bilan}
+
+		\subsection{Résultats}
+		
+		\subsection{Perspectives}

@@ -43,16 +43,13 @@
       Parmi les méthodes de propositions de régions les plus connues, on trouve celles tirées de conversion de l'image en superpixels, ou encore celles basées sur le glissement d'une fenêtre sur la surface à traiter. 
       L'approche adoptée par Fast et Faster R-CNN est différente. 
       Elle vise à séparer le problème de proposition d'objet de celui de détection de l'objet, tout en mutualisant un certain nombre de données entre ces deux facettes. 
+      les cartes de caractéritiques résultant de la convolution sont mises au service de suggestions de régions délimitant un objet (region proposal) au sein de l'image. 
       Le framework employé va donc être composé de plusieurs modules aux objectifs disctincts (qui peuvent être mis en prallèle avec ceux décrits précédemment) : 
       
       \begin{itemize}
        \item Un module RPN (Region Proposal Network)
        \item Un module de classification d'objet basé sur la bibliothèque Caffe
       \end{itemize}
-      
-      Dans Faster R-CNN, les cartes de caractéritiques résultant de la convolution sont mises au service de suggestions de régions délimitant un objet (region proposal) au sein de l'image. Le réseau se voit également
-      complété d'un RPN (Region Proposal Network). Un RPN est un type de CNN capable simultanément d'estimer la présence ou non d'un objet (objectness score) et d'en donner les limites, en tout point de l'image.
-      Un RPN est entraînable de bout-en-bout. 
       
       L'objectif d'optimisation liée à la detection d'objets est atteint par le framework, 
       puisqu'on observe une réduction du goulet d'étranglement représenté par la proposition de régions d'intérêt à 0.01 seconde par image sur GPU (sur PASCAL VOC). 
@@ -66,10 +63,80 @@
       Pour ce faire, nous nous sommes basés sur son impélmentation originale en Python, ainsi que sur divers travaux issus du web \cite{Bib_FasterRCNN_encapsulation}.  
       
       \section{Suivi d'objets}
+        \subsection{Principes}
+        En matière de vision par ordinateur, le suivi d'objet est une discipline visant à déterminer les positions successives d'un objet au cours d'une séquence d'images (vidéo).
+        Nous traiterons ici le suivi à court terme, qui consiste à considérer comme objet une partie d'une image $n$ repérée par une position, et à retrouver la position de cet objet dans l'image $n+1$.
+        
+        Pour ce faire, il est nécessaire d'établir un modèle mathématique de l'objet à travers une extraction de caractéristiques comme vu en 1.1.2.
+        Le vecteur de caractéristiques obtenu sera ensuite comparé à des modèles potentiellement acceptables issus de l'image $n+1$, afin de déterminer le modèle plus proche, qui reflètera l'objet d'intérêt de l'image $n$ dans l'image $n+1$, et permettra donc de déterminer sa nouvelle position.
+        Une fois la nouvelle position trouvée, le modèle doit être "entraîné" de manière à refléter les possibles changements d'aspect d'un objet (à savoir ici sa forme et ses couleurs) au cours de la séquence.
+        Le modèle $n$ représentant l'objet à une image $n$ est donc fonction de tous les modèles ($0$ à $n$) jugés acceptables par l'algorithme de comparaison.
+        Nous avons choisi comme caractéristiques la combinaison d'un histogramme de gradients orientés (HOG) et d'un histogramme pondéré avant-plan/arrière-plan (Foreground/Background histogram), deux principes aux qualités complémentaires et aux coûts en matière de puissance de calcul faible.
+        
+        \subsection{Histogramme de gradient orienté}
+        La technique d'extraction de l'histogramme de gradient orienté a été pour la première fois proposée par Navneet Dalal, Bill Triggs \cite{Bib_HOG}.
 
-	\subsection{Histogramme de gradient}
-	\subsection{Background Foreground}
-    
+        L'idée qui sous-tend ce type de descripteur est que la forme d'un objet dans une image peut être décrite par la distribution de l'intensité du gradient autour de cet objet, ce gradient décrivant précisément l'évolution de l'intensité des pixels dans la zone de l'objet.
+        
+        Pour calculer ce descripteur, on divise l'image en régions adjacentes de petite taille (cellules), et on calcule l'intensité du gradient selon $n$ directions pour les pixels de chaque cellule.
+        Ces intensités d'orientations constituent un histogramme de $n$ classes, appelé descripteur, dont la combinaison forme un vecteur de descripteurs caractéristique de l'image.
+        Il devient alors aisé de comparer deux vecteurs et d'en tirer un coefficient de similitude.
+        
+		      \begin{figure}[H]
+			  \centering
+			  \makebox[\textwidth]{\includegraphics[width=.5\paperwidth]{c2p2s2_hog}}
+			  \caption{ Histogramme de gradient orienté }
+			  \label{fig:c2p2s2_hog}
+		      \end{figure}
+			  
+        \subsection{Histogramme colorimétrique pondéré}
+        
+        Cette technique d'extraction de caractéristique, présentée récemment dans l'algorithme de suivi Staple \cite{Bib_STAPLE}, consiste à pondérer un histogramme colorimétrique classique (dans un espace RVB) en donnant un poids plus important aux couleurs présentes dans l'objet de référence et en diminuant les poids des couleurs présentes dans l'arrière plan (zone entourant l'objet de référence).
+        
+        En pratique, elle consiste à construire un descripteur d'une image de référence constitué de l'histogramme colorimétrique de l'avant-plan, qu'on nommera $FG^{n}$ et de celui l'arrière-plan, qu'on nommera $BG^{n}$, avec $n$ le nombre de classes de l'histogramme. 
+        La probabilité $p(x,y)$ d'un pixel $(x,y)$ de l'image d'appartenir à l'objet recherché se calcule en utilisant son histogramme colorimétrique, que l'on nommera $R^{n}$.
+		On a donc: 
+        \begin{center}
+          $ p(x,y) = R^{n}(x,y) \times \dfrac{FG^{n}}{FG^{n}+BG^{n}+0.0001}$
+        \end{center}
+
+        \subsection{Approche pratique}
+        Dans notre solution, le RPN fournit la position de l'objet d'intérêt au temps $n$, nous initialisons donc le modèle de l'objet à suivre d'après cette prédiction, et le faisons évoluer au fur et à mesure des images suivantes, en fonction des modèles acceptés à chaque étape du suivi.
+        L'algorithme de suivi est donc libéré de toutes considérations de classification, car la nature de l'objet est défini par des caractéristiques calculées à la première itération, et qui lui sont donc uniques et non communs à des classes d'objets. Ceci permet de discriminer un objet parmis d'autres de la même classe, ce qui n'est pas faisable simplement par Faster-RCNN.
+        
+		Le psoeudo-code suivant résume son fonctionnement :
+	
+		\begin{lstlisting}
+		
+		// Recuperation de la position initiale
+		position <- CNN_detection()
+		// Initialisation du modele par calcul des caracteristiques
+		modele <- { HoG(position), FgHist(position), BgHist(position) }
+		
+		position_n <- position
+		Pour toute image dans flux_images faire : 
+			// on cherche dans toute l'image un modele correspondant
+			meilleur_score <- 0
+			Pour toute position_possible dans image faire:
+				modele_possible <- { HoG(position_possible), 
+					FgHist(position_possible), BgHist(position_possible) }
+				score = comparaison(modele, modele_possible)
+				Si (score > meilleur_score)
+					// on a trouve la nouvelle position de l'objet
+					position_n <- position_possible
+					meilleur_score <- score
+				Fin Si
+			Fin pour
+			// on met a jour le modele avec les nouvelles informations
+			modele.MaJ({ HoG(position_n), FgHist(position_n), 
+				BgHist(position_n) })
+		Fin pour
+		
+		\end{lstlisting}
+		
+		Toutefois, la robustesse de ce type d'algorithme est relative à la complexité de la scène.
+		Lors d'une perte de l'objet d'intérêt, caractérisé par un score (voir chapitre suivant), le modèle est réinitialisé avec la position fournie par le réseau de neurones lors d'une re-détection.
+		
       \section{SURF}
 
 	\subsection{Principes}
@@ -148,4 +215,5 @@
 	Fin pour
 	
 	\end{lstlisting}
+	
 	

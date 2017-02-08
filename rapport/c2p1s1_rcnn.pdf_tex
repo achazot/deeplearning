@@ -1,6 +1,6 @@
 %% Creator: Inkscape inkscape 0.91, www.inkscape.org
 %% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
-%% Accompanies image file 'c1p2s1_neuron.pdf' (pdf, eps, ps)
+%% Accompanies image file 'c2p1s1_rcnn.pdf' (pdf, eps, ps)
 %%
 %% To include the image in your LaTeX document, write
 %%   \input{<filename>.pdf_tex}
@@ -36,7 +36,7 @@
   }%
   \providecommand\rotatebox[2]{#2}%
   \ifx\svgwidth\undefined%
-    \setlength{\unitlength}{367.34011232bp}%
+    \setlength{\unitlength}{884.7168463bp}%
     \ifx\svgscale\undefined%
       \relax%
     \else%
@@ -48,7 +48,18 @@
   \global\let\svgwidth\undefined%
   \global\let\svgscale\undefined%
   \makeatother%
-  \begin{picture}(1,0.63973621)%
-    \put(0,0){\includegraphics[width=\unitlength,page=1]{c1p2s1_neuron.pdf}}%
+  \begin{picture}(1,0.47113533)%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{c2p1s1_rcnn.pdf}}%
+    \put(0.85048324,0.02469138){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Résultat}}}%
+    \put(0.12760789,0.0243862){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{C}}}%
+    \put(0.13845882,0.0243862){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{onvolution}}}%
+    \put(0.25117284,0.08855362){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Cartes de}}}%
+    \put(0.22517583,0.06413903){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{caractéristiques}}}%
+    \put(0.34698881,0.2551606){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Proposition de}}}%
+    \put(0.33705343,0.23075731){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Régions d’intérêt}}}%
+    \put(0.47751645,0.45486291){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Régions d’intérêt}}}%
+    \put(0.53817993,0.02469138){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Couches entièrement}}}%
+    \put(0.58000122,0.0002881){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{connectées}}}%
+    \put(0.03661267,0.02469138){\color[rgb]{0,0,0}\makebox(0,0)[lb]{\smash{Image}}}%
   \end{picture}%
 \endgroup%
